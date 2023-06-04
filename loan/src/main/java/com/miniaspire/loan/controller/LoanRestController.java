@@ -9,23 +9,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@RequestMapping("/loans")
+@RequestMapping("/loans")
 public class LoanRestController {
 
-    @Autowired
     public LoanService loanService;
 
     LoanRestController(LoanService loanService) {
         this.loanService = loanService;
     }
 
-    @GetMapping("/loans")
+    @GetMapping("")
     public ResponseEntity<List<Loan>> getLoans(){
         var list = loanService.getLoans();
         return ResponseEntity.ok().body(list);
     }
 
-    @GetMapping("/loans/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Loan> getLoans(@RequestParam String id){
         return null;
     }

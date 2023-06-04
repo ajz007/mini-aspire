@@ -3,10 +3,12 @@ package com.miniaspire.loan.repository;
 import com.miniaspire.loan.entity.Loan;
 import com.miniaspire.loan.entity.LoanStatus;
 import com.miniaspire.loan.repository.entity.LoanEntity;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class LoanRepository {
 
     private ILoanRepository loanRepository;

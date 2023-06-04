@@ -1,4 +1,4 @@
-package com.miniaspire.loan.exceptionhandler;
+package com.miniaspire.auth.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,15 +9,22 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value
             = { Exception.class })
     protected ResponseEntity<Object> handleException(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Something is not right.. We will check this and get back.";
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value
+            = { RuntimeException.class })
+    protected ResponseEntity<Object> handleRuntimeException(
+            RuntimeException ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }
