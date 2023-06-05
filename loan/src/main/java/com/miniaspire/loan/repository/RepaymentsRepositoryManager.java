@@ -14,8 +14,10 @@ public class RepaymentsRepositoryManager {
     private IRepaymentsRepository repaymentsRepository;
     private ILoanRepository loanRepository;
 
-    public RepaymentsRepositoryManager(IRepaymentsRepository repaymentsRepository) {
+    public RepaymentsRepositoryManager(IRepaymentsRepository repaymentsRepository,
+                                       ILoanRepository loanRepository) {
         this.repaymentsRepository = repaymentsRepository;
+        this.loanRepository = loanRepository;
     }
 
     public List<Repayment> getRepayments(String loanAccount) {

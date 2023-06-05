@@ -19,16 +19,16 @@ public class LoanService {
     }
 
     public List<Loan> getLoans(String userRole) {
-        if (userRole!=null && !userRole.equalsIgnoreCase("ADMIN")) {
+        if (userRole != null && !userRole.equalsIgnoreCase("ADMIN")) {
             throw new RuntimeException("You do not have access to this service");
         }
         return loanRepositoryManager.getAllLoans();
     }
 
     public List<Loan> getUserLoans(String username, String userRole) {
-        if (userRole!=null && userRole.equalsIgnoreCase("USER")) {
+        if (userRole != null && userRole.equalsIgnoreCase("USER")) {
             return loanRepositoryManager.getAllLoans(username);
-        } else if(userRole!=null && userRole.equalsIgnoreCase("USER")) {
+        } else if (userRole != null && userRole.equalsIgnoreCase("USER")) {
             return loanRepositoryManager.getAllLoans();
         }
         throw new RuntimeException("You do not have sufficient access to this service");
@@ -54,7 +54,7 @@ public class LoanService {
     }
 
     public List<Repayment> getRepayments(String username, String userRole, String loanAccount) {
-        if(userRole!=null && userRole.equalsIgnoreCase("ADMIN")) {
+        if (userRole != null && userRole.equalsIgnoreCase("ADMIN")) {
             return repaymentsRepositoryManager.getRepayments(loanAccount);
         } else {
             return repaymentsRepositoryManager.getRepayments(username, loanAccount);
@@ -63,10 +63,10 @@ public class LoanService {
 
     public void updateLoanStatus(String userRole, String loanAccount,
                                  String loanStatus) {
-        if (userRole !=null && !userRole.equalsIgnoreCase("ADMIN")) {
-            throw  new RuntimeException("You do not have sufficient access for this service");
+        if (userRole != null && !userRole.equalsIgnoreCase("ADMIN")) {
+            throw new RuntimeException("You do not have sufficient access for this service");
         }
-        if(loanStatus == null) {
+        if (loanStatus == null) {
             throw new RuntimeException("Unknown value for LoanStatus");
         }
 

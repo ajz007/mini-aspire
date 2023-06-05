@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface ILoanRepository extends CrudRepository<LoanEntity, Integer> {
     Optional<LoanEntity> findByAccount(String account);
 
-    @Query(value = "SELECT * from Loan l where l.loginId =:username AND l.account =:account ", nativeQuery = true)
+    @Query(value = "SELECT * from Loan l where l.login_id =:username AND l.account =:account ", nativeQuery = true)
     Optional<LoanEntity> findByUsernameAndAccount(@Param("username") String username,
                                                   @Param("account") String account);
 
