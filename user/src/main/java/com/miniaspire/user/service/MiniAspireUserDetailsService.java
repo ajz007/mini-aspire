@@ -1,7 +1,7 @@
 package com.miniaspire.user.service;
 
 import com.miniaspire.user.dto.User;
-import com.miniaspire.user.repository.UserRepository;
+import com.miniaspire.user.repository.UserRepositoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 public class MiniAspireUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private UserRepositoryManager userRepositoryManager;
 
     private PasswordEncoder passwordEncoder;
 
@@ -23,31 +23,40 @@ public class MiniAspireUserDetailsService implements UserDetailsService {
     }
 
     @Autowired
-    public MiniAspireUserDetailsService(UserRepository userRepository,
+    public MiniAspireUserDetailsService(UserRepositoryManager userRepositoryManager,
                                         PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
+        this.userRepositoryManager = userRepositoryManager;
         this.passwordEncoder = passwordEncoder;
     }
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByLoginId(username)
+        return userRepositoryManager.findByLoginId(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found : " + username));
     }
 
     public void registerUser(User user) {
+
+        if (userRepositoryManager.getUser(user.getLoginId()).isPresent()) {
+            throw new RuntimeException("LoginId is not available");
+        }
+
         user.setPassword(passwordEncoder
                 .encode(user.getPassword()));
-        userRepository.saveUser(user);
+        try {
+            userRepositoryManager.saveUser(user);
+        } catch (Exception e) {
+            throw new RuntimeException("LoginId is not available");
+        }
     }
 
     public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        return userRepositoryManager.getAllUsers();
     }
 
     public User getUser(String loginId) {
-        return userRepository.getUser(loginId)
+        return userRepositoryManager.getUser(loginId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 

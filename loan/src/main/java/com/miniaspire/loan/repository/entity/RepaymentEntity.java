@@ -1,29 +1,29 @@
 package com.miniaspire.loan.repository.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "repayments")
 public class RepaymentEntity {
     @Id
-    @Column
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public int id;
 
-    @Column(name = "loan_id")
-    public int loanId;
+    /*@Column(name = "loan_id", unique = true)
+    public int loanId;*/
 
     @Column
     public BigDecimal amount;
 
     @Column(name = "due_date")
-    public Timestamp due_date;
+    public Date due_date;
 
     @Column
-    public String status;
+    public int status;
 
     @Column(name = "created_date")
     public Timestamp createdDate;

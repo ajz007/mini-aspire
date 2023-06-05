@@ -48,6 +48,7 @@ public class UserSecurityConfig {
                 .requestMatchers("/user/register", "/user/validate").permitAll()
                 .requestMatchers("/user/swagger-ui.html","user/v3/api-docs/swagger-config", "user/v3/api-docs").permitAll()
                 .requestMatchers("/h2-console", "/h2-console/*").permitAll()
+                .anyRequest().permitAll()
                 .and()
                 .build();
     }

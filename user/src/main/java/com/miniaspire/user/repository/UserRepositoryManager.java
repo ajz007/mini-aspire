@@ -12,12 +12,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserRepository {
+public class UserRepositoryManager {
 
     private final IUserRepository repository;
 
     @Autowired
-    public UserRepository(IUserRepository userRepository) {
+    public UserRepositoryManager(IUserRepository userRepository) {
         this.repository = userRepository;
     }
 
@@ -46,6 +46,7 @@ public class UserRepository {
         entity.setLoginId(user.getLoginId());
         entity.setPassword(user.getPassword());
         entity.setName(user.getUsername());
+        entity.setEmail(user.getEmail());
         entity.setRole(user.getUserRole().getValue());
         repository.save(entity);
     }

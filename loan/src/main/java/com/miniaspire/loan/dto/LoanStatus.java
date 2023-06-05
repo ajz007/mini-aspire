@@ -1,4 +1,4 @@
-package com.miniaspire.loan.entity;
+package com.miniaspire.loan.dto;
 
 public enum LoanStatus {
     PENDING(0), APPROVED(1), CLOSED(2);
@@ -15,6 +15,10 @@ public enum LoanStatus {
             case 1: return APPROVED;
             case 2: return CLOSED;
         }
-        throw new RuntimeException("unknown status");
+        throw new RuntimeException("Unknown value for LoanStatus");
+    }
+
+    public int getValue() {
+        return status;
     }
 }
