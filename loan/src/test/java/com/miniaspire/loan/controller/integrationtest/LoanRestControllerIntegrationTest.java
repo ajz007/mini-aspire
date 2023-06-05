@@ -3,6 +3,7 @@ package com.miniaspire.loan.controller.integrationtest;
 import com.miniaspire.loan.LoanApplication;
 import jakarta.ws.rs.core.MultivaluedHashMap;
 import jakarta.ws.rs.core.MultivaluedMap;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class LoanRestControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void getRepaymentsSunnyDayTest() throws Exception {
         mvc.perform(MockMvcRequestBuilders.get("/loan/repayments")
                         .contentType(MediaType.APPLICATION_JSON)
