@@ -15,9 +15,18 @@ public class LoanExceptionHandler extends ResponseEntityExceptionHandler {
             = { Exception.class })
     protected ResponseEntity<Object> handleException(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Something is not right.. We will check this and get back.";
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        ex.printStackTrace();
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(value
+            = { RuntimeException.class })
+    protected ResponseEntity<Object> handleRuntimeException(
+            RuntimeException ex, WebRequest request) {
+        ex.printStackTrace();
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
 }

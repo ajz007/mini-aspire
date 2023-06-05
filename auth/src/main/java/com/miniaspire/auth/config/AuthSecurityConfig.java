@@ -28,17 +28,18 @@ public class AuthSecurityConfig {
         return http.csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/auth/register", "/auth/token", "/auth/validate").permitAll()
+                .requestMatchers("/auth/login").permitAll()
                 .requestMatchers("/auth/swagger-ui.html","auth/v3/api-docs/swagger-config", "/auth/v3/api-docs").permitAll()
                 .requestMatchers("/h2-console", "/h2-console/*").permitAll()
                 .and()
                 .build();
     }
 
-    @Bean
+    /*@Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
+*/
 /*    @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
@@ -47,9 +48,9 @@ public class AuthSecurityConfig {
         return authenticationProvider;
     }*/
 
-    @Bean
+   /* @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
-    }
+    }*/
 
 }

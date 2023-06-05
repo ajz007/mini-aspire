@@ -4,6 +4,7 @@ import com.miniaspire.user.dto.AuthRequest;
 import com.miniaspire.user.dto.User;
 import com.miniaspire.user.service.MiniAspireUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,7 +27,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{loginId}")
-    public ResponseEntity<User> getUser(String loginId) {
+    public ResponseEntity<User> getUser(@PathVariable String loginId) {
         //TODO: Throw exception if not found
         return ResponseEntity.ok(userService.getUser(loginId));
     }
@@ -34,7 +35,7 @@ public class UserRestController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
         userService.registerUser(user);
-        return ResponseEntity.ok("User Created");
+        return new ResponseEntity<String>("User Created", HttpStatus.CREATED);
     }
 
     @PostMapping("/validate")
