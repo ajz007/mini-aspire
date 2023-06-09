@@ -4,6 +4,7 @@ import com.miniaspire.loan.dto.Loan;
 import com.miniaspire.loan.dto.Repayment;
 import com.miniaspire.loan.dto.RepaymentFrequency;
 import com.miniaspire.loan.dto.RepaymentStatus;
+import com.miniaspire.loan.exceptions.InvalidInputException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -16,7 +17,10 @@ import java.util.Set;
 @Service
 public class RepaymentsManager {
 
-    public static Set<Repayment> createRepayments(Loan loan, RepaymentFrequency repaymentFrequency) {
+    public Set<Repayment> createRepayments(Loan loan, RepaymentFrequency repaymentFrequency) {
+
+        if(loan == null) throw new IllegalArgumentException();
+
         BigDecimal repayAmount = loan.getLoanAmount()
                 .divide(BigDecimal.valueOf(loan.getTerm()), 6, RoundingMode.HALF_UP);
         LocalDate nextDate = LocalDate.now();
@@ -26,7 +30,7 @@ public class RepaymentsManager {
             var repayment = new Repayment();
             repayment.setCreatedDate(LocalDateTime.now());
             repayment.setAmount(repayAmount);
-            nextDate = getNextDate(nextDate, RepaymentFrequency.WEEKLY);
+            nextDate = getNextDate(nextDate, repaymentFrequency);
             repayment.setDueDate(nextDate);
             repayment.setStatus(RepaymentStatus.PENDING);
             list.add(repayment);
@@ -34,17 +38,11 @@ public class RepaymentsManager {
         return list;
     }
 
-    private static LocalDate getNextDate(LocalDate localDate,
-                                         RepaymentFrequency repaymentFrequency) {
-        switch (repaymentFrequency) {
-            case WEEKLY -> {
-                return localDate.plusDays(7);
-            }
-            case MONTHLY -> {
-                //check for specific month, month in leap year later
-                return localDate.plusDays(30);
-            }
+    private LocalDate getNextDate(LocalDate localDate,
+                                  RepaymentFrequency repaymentFrequency) {
+        if (repaymentFrequency.equals(RepaymentFrequency.WEEKLY)) {
+            return localDate.plusDays(7);
         }
-        return localDate;
+        throw new InvalidInputException("Unknown value for RepaymentFrequency");
     }
 }

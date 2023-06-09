@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -25,12 +26,6 @@ public class LoanEntity {
     @Column(name = "term")
     public int term;
 
-    @Column(name = "term_type")
-    public int termType;
-
-    @Column(name = "int_rate")
-    public float interestRate;
-
     @Column
     public int status;
 
@@ -39,4 +34,17 @@ public class LoanEntity {
 
     @OneToMany(cascade = CascadeType.ALL)
     public Set<RepaymentEntity> repayments;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        LoanEntity that = (LoanEntity) o;
+        return account.equals(that.account);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(account);
+    }
 }
