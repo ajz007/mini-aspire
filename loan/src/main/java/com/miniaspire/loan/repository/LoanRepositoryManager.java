@@ -4,6 +4,8 @@ import com.miniaspire.loan.dto.Loan;
 import com.miniaspire.loan.dto.LoanStatus;
 import com.miniaspire.loan.dto.Repayment;
 import com.miniaspire.loan.dto.RepaymentStatus;
+import com.miniaspire.loan.exceptions.InvalidInputException;
+import com.miniaspire.loan.exceptions.TechnicalUnExpectedException;
 import com.miniaspire.loan.repository.entity.LoanEntity;
 import com.miniaspire.loan.repository.entity.RepaymentEntity;
 import org.springframework.stereotype.Repository;
@@ -12,6 +14,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -55,28 +58,37 @@ public class LoanRepositoryManager {
         return listOfLoans;
     }
 
-    public Loan saveLoan(Loan loanRequest) {
+    public Loan createLoan(Loan loanRequest) {
 
         if (loanRepository.findByAccount(loanRequest.getAccount()).isPresent()) {
-            throw new RuntimeException("Loan account is already present");
+            throw new InvalidInputException("Loan account is already present");
         }
         try {
             var loanEntity = loanRepository.save(getLoanEntity(loanRequest));
             return getLoan(loanEntity);
         } catch (Exception e) {
-            throw new RuntimeException("Error creating loan account");
+            throw new TechnicalUnExpectedException("Error creating loan account");
+        }
+    }
+
+    public Loan updateLoan(Loan loanRequest) {
+        try {
+            var loanEntity = loanRepository.save(getLoanEntity(loanRequest));
+            return getLoan(loanEntity);
+        } catch (Exception e) {
+            throw new TechnicalUnExpectedException("Error creating loan account");
         }
     }
 
     public Loan getLoan(String loanAccount) {
         var res = loanRepository.findByAccount(loanAccount)
-                .orElseThrow(() -> new RuntimeException("Loan account does not exist"));
+                .orElseThrow(() -> new InvalidInputException("Loan account does not exist"));
         return getLoan(res);
     }
 
-    public Loan getLoan(String loanAccount, String username) {
+    public Loan getLoan(String username, String loanAccount) {
         var res = loanRepository.findByUsernameAndAccount(username, loanAccount)
-                .orElseThrow(() -> new RuntimeException("Loan account does not exist"));
+                .orElseThrow(() -> new InvalidInputException("Loan account does not exist"));
         return getLoan(res);
     }
 
@@ -90,14 +102,16 @@ public class LoanRepositoryManager {
         loanEntity.status = loan.getStatus().getValue();
         loanEntity.createdDate = Timestamp.valueOf(Optional.ofNullable(loan.getCreatedDate())
                 .orElse(LocalDateTime.now()));
-        loanEntity.repayments = Optional.ofNullable(loan.getRepayments()).get()
-                .stream().map(repayment -> {
-                    var repaymentEntity = new RepaymentEntity();
-                    repaymentEntity.amount = repayment.getAmount();
-                    repaymentEntity.due_date = Date.valueOf(repayment.getDueDate());
-                    repaymentEntity.status = repayment.getStatus().getValue();
-                    return repaymentEntity;
-                }).collect(Collectors.toSet());
+        loanEntity.repayments = Optional.ofNullable(loan.getRepayments())
+                .map(repayments ->
+                        repayments.stream().map(repayment -> {
+                            var repaymentEntity = new RepaymentEntity();
+                            repaymentEntity.amount = repayment.getAmount();
+                            repaymentEntity.due_date = Date.valueOf(repayment.getDueDate());
+                            repaymentEntity.status = repayment.getStatus().getValue();
+                            return repaymentEntity;
+                        }).collect(Collectors.toSet())
+                ).orElse(new HashSet<>());
         return loanEntity;
     }
 
@@ -108,15 +122,17 @@ public class LoanRepositoryManager {
         loan.setLoanAmount(loanEntity.loanAmount);
         loan.setTerm(loanEntity.term);
         loan.setStatus(LoanStatus.fromValue(loanEntity.status));
-        loan.repayments = Optional.ofNullable(loanEntity.repayments).get()
-                .stream().map(repaymentEntity -> {
+        loan.repayments = Optional.ofNullable(loanEntity.repayments)
+                .map(repaymentEntities ->
+                repaymentEntities.stream().map(repaymentEntity -> {
                     var repayment = new Repayment();
-                    //repaymentEntity.loanId = loan.getLoginId();
                     repayment.setAmount(repaymentEntity.amount);
                     repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
                     repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
                     return repayment;
-                }).collect(Collectors.toSet());
+                }).collect(Collectors.toSet())
+        ).orElse(new HashSet<>());
+
         return loan;
     }
 

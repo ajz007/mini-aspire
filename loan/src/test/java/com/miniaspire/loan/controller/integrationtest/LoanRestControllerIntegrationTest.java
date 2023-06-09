@@ -1,24 +1,18 @@
 package com.miniaspire.loan.controller.integrationtest;
 
 import com.miniaspire.loan.LoanApplication;
-import jakarta.ws.rs.core.MultivaluedHashMap;
-import jakarta.ws.rs.core.MultivaluedMap;
-import org.junit.Ignore;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.event.annotation.BeforeTestClass;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.util.Map;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(
@@ -49,10 +43,21 @@ public class LoanRestControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(USER_NAME_HEADER, USER_NAME_CUSTOMER)
                         .header(USER_ROLE_HEADER, USER_ROLE_CUSTOMER)
-                        .content(createLoanInput()))
+                        .content(createLoanInput("10001", "10000", "3")))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.content()
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void createLoanAdminThrowsException() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/loan")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(USER_NAME_HEADER, USER_NAME_ADMIN)
+                        .header(USER_ROLE_HEADER, USER_ROLE_ADMIN)
+                        .content(createLoanInput("10001", "10000", "3")))
+                .andExpect(MockMvcResultMatchers.status().is4xxClientError());
+
     }
 
     @Test
@@ -67,11 +72,13 @@ public class LoanRestControllerIntegrationTest {
     }
 
     @Test
-    @Ignore
     public void getRepaymentsSunnyDayTest() throws Exception {
+
+        createLoanAccount("10002", "10000", "3");
+
         mvc.perform(MockMvcRequestBuilders.get("/loan/repayments")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("loanAccount","1")
+                        .param("loanAccount","10002")
                         .header(USER_NAME_HEADER, USER_NAME_CUSTOMER)
                         .header(USER_ROLE_HEADER, USER_ROLE_CUSTOMER))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -79,12 +86,37 @@ public class LoanRestControllerIntegrationTest {
                         .contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
     }
 
-    private String createLoanInput() {
+    @Test
+    public void getRepaymentsValidateNumberOfRepayments() throws Exception {
+
+        createLoanAccount("10002", "10000", "3");
+
+        mvc.perform(MockMvcRequestBuilders.get("/loan/repayments")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("loanAccount","10002")
+                        .header(USER_NAME_HEADER, USER_NAME_CUSTOMER)
+                        .header(USER_ROLE_HEADER, USER_ROLE_CUSTOMER))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(3)));
+    }
+
+    private String createLoanInput(String account, String amount, String term) {
         return "{\n" +
-                "  \"account\": \"1\",\n" +
-                "  \"loanAmount\": 1,\n" +
-                "  \"term\": 1\n" +
+                "  \"account\": "+account+",\n" +
+                "  \"loanAmount\": "+amount+",\n" +
+                "  \"term\": "+term+"\n" +
                 "}";
+    }
+
+    private void createLoanAccount(String account, String amount, String term) throws Exception {
+        mvc.perform(MockMvcRequestBuilders.post("/loan")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(USER_NAME_HEADER, USER_NAME_CUSTOMER)
+                        .header(USER_ROLE_HEADER, USER_ROLE_CUSTOMER)
+                        .content(createLoanInput(account, amount, term)))
+                .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
 }
