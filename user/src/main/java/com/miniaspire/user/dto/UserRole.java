@@ -1,5 +1,7 @@
 package com.miniaspire.user.dto;
 
+import com.miniaspire.user.exception.InvalidInputException;
+
 public enum UserRole {
 
     USER(0), ADMIN(1);
@@ -10,11 +12,15 @@ public enum UserRole {
     }
 
     public static UserRole fromValue(int role) {
-        switch(role) {
-            case 0: return USER;
-            case 1: return ADMIN;
+        switch (role) {
+            case 0:
+                return USER;
+            case 1:
+                return ADMIN;
+            default:
+                throw new InvalidInputException("Invalid role for the user");
         }
-        throw new RuntimeException("Invalid role for the user");
+
     }
 
     public int getValue() {

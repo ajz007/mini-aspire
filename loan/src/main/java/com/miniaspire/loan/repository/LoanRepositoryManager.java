@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Repository
 public class LoanRepositoryManager {
 
+    private static final String LOAN_ACCT_DOES_NOT_EXIST = "Loan account does not exist";
     private final ILoanRepository loanRepository;
 
     public LoanRepositoryManager(ILoanRepository loanRepository) {
@@ -77,19 +78,31 @@ public class LoanRepositoryManager {
             var loanEntity = loanRepository.save(getLoanEntity(loanRequest));
             return getLoan(loanEntity);
         } catch (Exception e) {
-            throw new TechnicalUnExpectedException("Error creating loan account");
+            throw new TechnicalUnExpectedException("Error updating loan account");
+        }
+    }
+
+    public Loan updateLoanStatus(String loanAccount, int status) {
+        try {
+            var res = loanRepository.findByAccount(loanAccount)
+                    .orElseThrow(() -> new InvalidInputException(LOAN_ACCT_DOES_NOT_EXIST));
+            res.status = status;
+            var loanEntity = loanRepository.save(res);
+            return getLoan(loanEntity);
+        } catch (Exception e) {
+            throw new TechnicalUnExpectedException("Error updating loan status");
         }
     }
 
     public Loan getLoan(String loanAccount) {
         var res = loanRepository.findByAccount(loanAccount)
-                .orElseThrow(() -> new InvalidInputException("Loan account does not exist"));
+                .orElseThrow(() -> new InvalidInputException(LOAN_ACCT_DOES_NOT_EXIST));
         return getLoan(res);
     }
 
     public Loan getLoan(String username, String loanAccount) {
         var res = loanRepository.findByUsernameAndAccount(username, loanAccount)
-                .orElseThrow(() -> new InvalidInputException("Loan account does not exist"));
+                .orElseThrow(() -> new InvalidInputException(LOAN_ACCT_DOES_NOT_EXIST));
         return getLoan(res);
     }
 
@@ -124,16 +137,18 @@ public class LoanRepositoryManager {
         loan.setLoanAmount(loanEntity.loanAmount);
         loan.setTerm(loanEntity.term);
         loan.setStatus(LoanStatus.fromValue(loanEntity.status));
+        loan.setCreatedDate(loanEntity.createdDate.toLocalDateTime());
         loan.repayments = Optional.ofNullable(loanEntity.repayments)
                 .map(repaymentEntities ->
-                repaymentEntities.stream().map(repaymentEntity -> {
-                    var repayment = new Repayment();
-                    repayment.setAmount(repaymentEntity.amount);
-                    repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
-                    repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
-                    return repayment;
-                }).collect(Collectors.toSet())
-        ).orElse(new HashSet<>());
+                        repaymentEntities.stream().map(repaymentEntity -> {
+                            var repayment = new Repayment();
+                            repayment.setAmount(repaymentEntity.amount);
+                            repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
+                            repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
+                            repayment.setCreatedDate(repaymentEntity.createdDate.toLocalDateTime());
+                            return repayment;
+                        }).collect(Collectors.toSet())
+                ).orElse(new HashSet<>());
 
         return loan;
     }

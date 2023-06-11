@@ -6,7 +6,9 @@ import com.miniaspire.payment.dto.RepaymentStatus;
 import com.miniaspire.payment.exceptions.InvalidInputException;
 import com.miniaspire.payment.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.payment.repository.PaymentRepositoryManager;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +22,7 @@ public class PaymentService {
 
     private static final String USER_NAME = "x-user_name";
     private static final String USER_ROLE = "x-user_role";
-    private static final String SERVICE_ROLE = "true";
+    private static final String SERVICE_ROLE = "service_role";
 
     private final PaymentRepositoryManager paymentRepositoryManager;
     private final RestTemplate restTemplate;
@@ -44,7 +46,7 @@ public class PaymentService {
 
         //get all repayments This also validates if the loan account belongs to user. if not throw exception -- should happen in LOAN
         var repayments = restTemplate
-                .exchange("http://LOAN/loan/repayments/" + paymentRequest.getLoanAccount()+"?repaymentStatus=PENDING",
+                .exchange("http://LOAN/loan/repayments/" + paymentRequest.getLoanAccount() + "?repaymentStatus=PENDING",
                         HttpMethod.GET, entity, Repayment[].class);
 
         if (Optional.ofNullable(repayments.getBody()).orElse(new Repayment[0]).length == 0) {
@@ -105,18 +107,14 @@ public class PaymentService {
      * @param scheduledRepayment
      */
     private void updateRepaymentStatus(String username, String userRole, Repayment scheduledRepayment) {
-      /*  HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.set(USER_NAME, username);
         headers.set(USER_ROLE, userRole);
         headers.set(SERVICE_ROLE, "true");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        //HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        HttpEntity<Repayment> requestUpdate = new HttpEntity<>(scheduledRepayment, headers);*/
+        HttpEntity<Repayment> requestUpdate = new HttpEntity<>(scheduledRepayment, headers);
 
-       /* restTemplate.put("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
-                scheduledRepayment);*/
-        restTemplate.put("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
-                HttpMethod.PUT, Void.class, scheduledRepayment);
+        restTemplate.exchange("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
+                HttpMethod.PUT, requestUpdate, String.class);
     }
 
     /**
@@ -140,6 +138,7 @@ public class PaymentService {
         headers.set(SERVICE_ROLE, "true");
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
-        restTemplate.put("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED", entity);
+        restTemplate.exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED",
+                HttpMethod.PUT, entity, String.class);
     }
 }

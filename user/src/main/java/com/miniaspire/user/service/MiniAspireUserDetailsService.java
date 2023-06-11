@@ -25,8 +25,7 @@ public class MiniAspireUserDetailsService implements UserDetailsService {
     }
 
     @Autowired
-    public MiniAspireUserDetailsService(UserRepositoryManager userRepositoryManager,
-                                        PasswordEncoder passwordEncoder) {
+    public MiniAspireUserDetailsService(UserRepositoryManager userRepositoryManager, PasswordEncoder passwordEncoder) {
         this.userRepositoryManager = userRepositoryManager;
         this.passwordEncoder = passwordEncoder;
     }
@@ -34,8 +33,7 @@ public class MiniAspireUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepositoryManager.findByLoginId(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found : " + username));
+        return userRepositoryManager.findByLoginId(username).orElseThrow(() -> new UsernameNotFoundException("User not found : " + username));
     }
 
     public void registerUser(RegisterUser registerUser) {
@@ -44,12 +42,11 @@ public class MiniAspireUserDetailsService implements UserDetailsService {
             throw new InvalidInputException("LoginId is not available");
         }
 
-        registerUser.setPassword(passwordEncoder
-                .encode(registerUser.getPassword()));
+        registerUser.setPassword(passwordEncoder.encode(registerUser.getPassword()));
         try {
             userRepositoryManager.saveUser(User.from(registerUser));
         } catch (Exception e) {
-            throw new RuntimeException("LoginId is not available");
+            throw new InvalidInputException("LoginId is not available");
         }
     }
 
@@ -58,8 +55,7 @@ public class MiniAspireUserDetailsService implements UserDetailsService {
     }
 
     public User getUser(String loginId) {
-        return userRepositoryManager.getUser(loginId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        return userRepositoryManager.getUser(loginId).orElseThrow(() -> new InvalidInputException("User not found"));
     }
 
     public boolean validate(String loginId, String password) {

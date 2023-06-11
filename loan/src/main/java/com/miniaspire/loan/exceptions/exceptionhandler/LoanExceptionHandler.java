@@ -16,54 +16,45 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class LoanExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoanExceptionHandler.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoanExceptionHandler.class);
+    private static final String EXCEPTION = "Exception:";
 
     @ExceptionHandler(value
-            = { Exception.class })
-    protected ResponseEntity<Object> handleException(
-            RuntimeException ex, WebRequest request) {
-
-        LOGGER.error("Exception:", ex);
-        return handleExceptionInternal(ex, ex.getMessage(),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
-    @ExceptionHandler(value
-            = { RuntimeException.class })
+            = {RuntimeException.class})
     protected ResponseEntity<Object> handleRuntimeException(
             RuntimeException ex, WebRequest request) {
 
-        LOGGER.error("Exception:", ex);
+        LOG.error(EXCEPTION, ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value
-            = { InvalidInputException.class })
+            = {InvalidInputException.class})
     protected ResponseEntity<Object> handleInvalidInputException(
             InvalidInputException ex, WebRequest request) {
 
-        LOGGER.error("Exception:", ex);
+        LOG.error(EXCEPTION, ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value
-            = { TechnicalUnExpectedException.class })
+            = {TechnicalUnExpectedException.class})
     protected ResponseEntity<Object> handleTechnicalUnExpectedException(
             TechnicalUnExpectedException ex, WebRequest request) {
 
-        LOGGER.error("Exception:", ex);
+        LOG.error(EXCEPTION, ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(value
-            = { UnAuthorisedAccessException.class })
+            = {UnAuthorisedAccessException.class})
     protected ResponseEntity<Object> handleUnAuthorisedAccessException(
             UnAuthorisedAccessException ex, WebRequest request) {
 
-        LOGGER.error("Exception:", ex);
+        LOG.error(EXCEPTION, ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }

@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 public class RepaymentsRepositoryManager {
@@ -20,8 +20,7 @@ public class RepaymentsRepositoryManager {
     private IRepaymentsRepository repaymentsRepository;
     private ILoanRepository loanRepository;
 
-    public RepaymentsRepositoryManager(IRepaymentsRepository repaymentsRepository,
-                                       ILoanRepository loanRepository) {
+    public RepaymentsRepositoryManager(IRepaymentsRepository repaymentsRepository, ILoanRepository loanRepository) {
         this.repaymentsRepository = repaymentsRepository;
         this.loanRepository = loanRepository;
     }
@@ -45,50 +44,44 @@ public class RepaymentsRepositoryManager {
     }
 
     public List<Repayment> getRepayments(String loanAccount, String repaymentStatus) {
-        var loan = loanRepository.findByAccount(loanAccount)
-                .orElseThrow(() -> new RuntimeException("Loan account not found"));
+        var loan = loanRepository.findByAccount(loanAccount).orElseThrow(() -> new RuntimeException("Loan account not found"));
         var list = loan.repayments;
-        return Optional.ofNullable(list).get()
-                .stream().map(repaymentEntity -> {
-                    var repayment = new Repayment();
-                    repayment.setId(repaymentEntity.id);
-                    repayment.setAmount(repaymentEntity.amount);
-                    repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
-                    repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
-                    repayment.setCreatedDate(repaymentEntity.createdDate.toLocalDateTime());
-                    return repayment;
-                })
-                .filter(repayment -> {
-                    if (repaymentStatus != null && RepaymentStatus.valueOf(repaymentStatus) != null) {
-                        return repayment.getStatus().equals(RepaymentStatus.valueOf(repaymentStatus));
-                    } else {
-                        return true;
-                    }
-                })
-                .collect(Collectors.toList());
+
+        return Optional.ofNullable(list).map(repaymentEntities -> repaymentEntities.stream().map(repaymentEntity -> {
+            var repayment = new Repayment();
+            repayment.setId(repaymentEntity.id);
+            repayment.setAmount(repaymentEntity.amount);
+            repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
+            repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
+            repayment.setCreatedDate(repaymentEntity.createdDate.toLocalDateTime());
+            return repayment;
+        }).filter(repayment -> {
+            if (repaymentStatus != null && RepaymentStatus.valueOf(repaymentStatus) != null) {
+                return repayment.getStatus().equals(RepaymentStatus.valueOf(repaymentStatus));
+            } else {
+                return true;
+            }
+        }).toList()).orElse(new ArrayList<>());
     }
 
     public List<Repayment> getRepayments(String username, String loanAccount, String repaymentStatus) {
-        var loan = loanRepository.findByUsernameAndAccount(username, loanAccount)
-                .orElseThrow(() -> new RuntimeException("Loan account not found"));
+        var loan = loanRepository.findByUsernameAndAccount(username, loanAccount).orElseThrow(() -> new RuntimeException("Loan account not found"));
         var list = loan.repayments;
-        return Optional.ofNullable(list).get()
-                .stream().map(repaymentEntity -> {
-                    var repayment = new Repayment();
-                    repayment.setId(repaymentEntity.id);
-                    repayment.setAmount(repaymentEntity.amount);
-                    repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
-                    repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
-                    repayment.setCreatedDate(repaymentEntity.createdDate.toLocalDateTime());
-                    return repayment;
-                }).filter(repayment -> {
-                    if (repaymentStatus != null && RepaymentStatus.valueOf(repaymentStatus) != null) {
-                        return repayment.getStatus().equals(RepaymentStatus.valueOf(repaymentStatus));
-                    } else {
-                        return true;
-                    }
-                })
-                .collect(Collectors.toList());
+        return Optional.ofNullable(list).map(repaymentEntities -> repaymentEntities.stream().map(repaymentEntity -> {
+            var repayment = new Repayment();
+            repayment.setId(repaymentEntity.id);
+            repayment.setAmount(repaymentEntity.amount);
+            repayment.setDueDate(repaymentEntity.due_date.toLocalDate());
+            repayment.setStatus(RepaymentStatus.fromValue(repaymentEntity.status));
+            repayment.setCreatedDate(repaymentEntity.createdDate.toLocalDateTime());
+            return repayment;
+        }).filter(repayment -> {
+            if (repaymentStatus != null && RepaymentStatus.valueOf(repaymentStatus) != null) {
+                return repayment.getStatus().equals(RepaymentStatus.valueOf(repaymentStatus));
+            } else {
+                return true;
+            }
+        }).toList()).orElse(new ArrayList<>());
     }
 
     public RepaymentEntity getRepaymentEntity(Repayment repayment) {

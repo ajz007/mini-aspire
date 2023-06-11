@@ -12,7 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value
-            = { Exception.class })
+            = {RuntimeException.class})
     protected ResponseEntity<Object> handleException(
             RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
@@ -20,7 +20,7 @@ public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value
-            = { RuntimeException.class })
+            = {RuntimeException.class})
     protected ResponseEntity<Object> handleRuntimeException(
             RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
