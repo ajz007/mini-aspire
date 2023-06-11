@@ -25,8 +25,6 @@ public class LoanRestController {
     private static final String SERVICE_ROLE = "service_role";
     private static final String EX_MSG = "Please login to continue";
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoanRestController.class);
-
     LoanRestController(LoanService loanService) {
         this.loanService = loanService;
     }

@@ -5,6 +5,8 @@ import com.miniaspire.loan.exceptions.InvalidInputException;
 import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.loan.repository.LoanRepositoryManager;
 import com.miniaspire.loan.repository.RepaymentsRepositoryManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
