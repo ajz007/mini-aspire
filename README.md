@@ -22,7 +22,7 @@ The apis are exposed via open api.
    3. [Microservices Design Patterns implemented](##MicroservicesDesignPatternsImplemented)
 
 
-#Configs
+# Configs
 1. Databse
     1. The database used here is H2 which is an in-memory database but also supports saving the file to the local disk
     2. To update the config, go to <module>/src/main/resources/application.properties
@@ -33,9 +33,9 @@ The apis are exposed via open api.
        Above configuration is for Loan DB and data would be saved at D:/data/loan
        Please give different part for each module database
    
-#Build and Run
+# Build and Run
 
-##Windows
+## Windows
    1. To build the project
       1. cd mvn-inspire
       2. mvnw clean install    
@@ -43,7 +43,7 @@ The apis are exposed via open api.
    2. To run the project:
       1. start_all_service.bat
 
-##Linux
+## Linux
 1. To build the project
     1. cd mvn-inspire
     2. mvnw clean install
@@ -51,7 +51,7 @@ The apis are exposed via open api.
 2. To run the project:
     1. ./start_all_service.sh
 
-##URLs
+## URLs
 1. To check the status of all services
    http://localhost:8079
 2. To check the openapi for all services
@@ -66,12 +66,12 @@ The apis are exposed via open api.
    http://localhost:8085/h2-console/
    jdbc url should be same as for payments in application.properties
 
-#Architecture
+# Architecture
 
 ![img_1.png](microservice_arch.png)
 
 
-#Basic Functional Flow
+# Basic Functional Flow
 
 1. Register user 
    1. Go to http://localhost:8080/swagger-ui.html
@@ -86,32 +86,32 @@ The apis are exposed via open api.
    2. Select Payment Service from 'Select a definition' drop down (Look at the top right corner)
    3. Go to 'POST' /payment to pay for next scheduled repayment.
 
-#Design choices
+# Design choices
 
-##Monolith vs Microservices
+## Monolith vs Microservices
 
-###Advantages of Monoliths
+### Advantages of Monoliths
 1. Easy build
 2. Easy to deploy
 3. Easy to maintain user sessions
 
-###Challenges of Monoliths
+### Challenges of Monoliths
 1. Difficult to maintain as they grow in size
 2. One service and choke the entire system
 3. Ends up creating dependency hell
 4. Difficult to scale beyond a limit
 
-###Advantages of Microservices
+### Advantages of Microservices
 1. Flexibility to choose any technology for each microservice 
 2. Quick and easy to add new features
 3. Flexibility to scale up and down each
 
-###Challenges of Microservices
+### Challenges of Microservices
 1. Too many services means a lot of effort goes into facilitating coordination
 2. Deployments become complex
 3. Basic transactions might need complex design patterns to achieve
 
-###Making the choice
+### Making the choice
 Our problem statement does not have volumetrics associated but, largely we can say the following:
    1. The Volume of users and loans would increase in same proportion. 
    2. The volume of payments would grow multi-fold compared to user/loans.
@@ -128,7 +128,7 @@ Going by the microservices approach we would be able to,
    But, with monolith this is very much a possibility and might end up in bad user experience and onboarding which can end up in loosing customers.
 4. So, for above reasons, I would go ahead with microservices
 
-#RDBMS vs NoSQL
+# RDBMS vs NoSQL
 
 Largely, we can say that the application would have following entities:
 1. User
@@ -141,7 +141,7 @@ about the atomicity and data integrity hence, I would go ahead with the RDBMS as
 Please note that I am using H2 in-memory database for development which is RDBMS based DB but, we can replace this with any other DB like Oracle, MySql etc.
 The choice of H2 is purely for ease of development and deployment for anybody who wants to validate this project.
 
-#Microservices Design Patterns implemented
+# Microservices Design Patterns implemented
 
 1. Bounded Context
    The first problem that we face while developing the microservices is, how to define the boundaries of a certain micro-service.
