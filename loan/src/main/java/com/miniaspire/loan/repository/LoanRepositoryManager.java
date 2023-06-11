@@ -50,6 +50,7 @@ public class LoanRepositoryManager {
             loanRes.setLoanId(loan.id);
             loanRes.setLoanAmount(loan.loanAmount);
             loanRes.setAccount(loan.account);
+            loanRes.setTerm(loan.term);
             loanRes.setStatus(LoanStatus.fromValue(loan.status));
             loanRes.setCreatedDate(loan.createdDate.toLocalDateTime());
             loanRes.setLoginId(loan.loginId);
@@ -109,6 +110,7 @@ public class LoanRepositoryManager {
                             repaymentEntity.amount = repayment.getAmount();
                             repaymentEntity.due_date = Date.valueOf(repayment.getDueDate());
                             repaymentEntity.status = repayment.getStatus().getValue();
+                            repaymentEntity.createdDate = Timestamp.valueOf(repayment.getCreatedDate());
                             return repaymentEntity;
                         }).collect(Collectors.toSet())
                 ).orElse(new HashSet<>());

@@ -17,6 +17,7 @@
 		<module>auth</module>
         <module>user</module>
         <module>loan</module>
+		<module>payment</module>
     </modules>
 
 

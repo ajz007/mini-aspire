@@ -32,6 +32,8 @@ public class LoanServiceTest {
     //data for adin
     private static final String USER_NAME_ADMIN = "admin";
     private static final String USER_ROLE_ADMIN = "ADMIN";
+    private static final String SERVICE_ROLE = "SERVICE_ROLE";
+    private static final String SERVICE_ROLE_VALUE = "true";
 
     //loan account
     private static final String LOAN_ACCOUNT = "1001";
@@ -119,13 +121,13 @@ public class LoanServiceTest {
     @Test
     public void getRepaymentsSunnyDay() {
         var res = loanService.getRepayments(USER_NAME_CUSTOMER,
-                USER_ROLE_CUSTOMER, LOAN_ACCOUNT);
+                USER_ROLE_CUSTOMER, LOAN_ACCOUNT, "");
         Assert.assertEquals(0, res.size());
     }
 
     @Test
     public void updateLoanStatus() {
-        loanService.updateLoanStatus(USER_ROLE_ADMIN, LOAN_ACCOUNT, "APPROVED");
+        loanService.updateLoanStatus(USER_ROLE_ADMIN, SERVICE_ROLE_VALUE, LOAN_ACCOUNT, "APPROVED");
         /*Mockito.verify(loanRepository).save(LoanEntity.class)
         Mockito.verify((loanRepository), Mockito.atMost(2));*/
 

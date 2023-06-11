@@ -20,9 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Loan {
 
-    private int id;
-
-    //@JsonIgnore
+    @JsonIgnore
     private int loanId;
 
     private String loginId;
@@ -40,7 +38,7 @@ public class Loan {
 
     private LocalDateTime createdDate;
 
-    //@JsonIgnore
+    @JsonIgnore
     public Set<Repayment> repayments = new HashSet<>();
 
     @Override

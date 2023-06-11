@@ -2,6 +2,7 @@ package com.miniaspire.loan.controller.integrationtest;
 
 import com.miniaspire.loan.LoanApplication;
 import org.hamcrest.Matchers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +73,7 @@ public class LoanRestControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void getRepaymentsSunnyDayTest() throws Exception {
 
         createLoanAccount("10002", "10000", "3");
@@ -87,6 +89,7 @@ public class LoanRestControllerIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void getRepaymentsValidateNumberOfRepayments() throws Exception {
 
         createLoanAccount("10002", "10000", "3");

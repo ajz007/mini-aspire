@@ -13,9 +13,6 @@ public class RepaymentEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     public int id;
 
-    /*@Column(name = "loan_id", unique = true)
-    public int loanId;*/
-
     @Column
     public BigDecimal amount;
 
@@ -27,4 +24,10 @@ public class RepaymentEntity {
 
     @Column(name = "created_date")
     public Timestamp createdDate;
+
+    @Column(name = "updated_date")
+    public Timestamp updatedDate;
+
+    @Column(name = "updated_by")
+    public String updatedBy;
 }

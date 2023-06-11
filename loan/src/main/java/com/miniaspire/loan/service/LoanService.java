@@ -14,6 +14,7 @@ public class LoanService {
 
     private static final String USER_ROLE_ADMIN = "ADMIN";
     private static final String USER_ROLE_CUSTOMER = "USER";
+    private static final String SERVICE_ROLE = "true";
 
     private final LoanRepositoryManager loanRepositoryManager;
     private final RepaymentsRepositoryManager repaymentsRepositoryManager;
@@ -56,20 +57,21 @@ public class LoanService {
         return new LoanCreateRes(loanres.getAccount(), loanres.getLoanAmount(), loanres.getTerm(), "Loan created successfully");
     }
 
-    public List<Repayment> getRepayments(String username, String userRole, String loanAccount) {
+    public List<Repayment> getRepayments(String username, String userRole, String loanAccount, String repaymentStatus) {
         if (userRole != null && userRole.equalsIgnoreCase(USER_ROLE_ADMIN)) {
-            return repaymentsRepositoryManager.getRepayments(loanAccount);
+            return repaymentsRepositoryManager.getRepayments(loanAccount, repaymentStatus);
         } else {
-            return repaymentsRepositoryManager.getRepayments(username, loanAccount);
+            return repaymentsRepositoryManager.getRepayments(username, loanAccount, repaymentStatus);
         }
     }
 
-    public void updateLoanStatus(String userRole, String loanAccount,
+    public void updateLoanStatus(String userRole, String serviceRole, String loanAccount,
                                  String loanStatus) {
         if (loanStatus == null) {
             throw new InvalidInputException("Unknown value for LoanStatus");
         }
-        if (userRole != null && !userRole.equalsIgnoreCase(USER_ROLE_ADMIN)) {
+        if (userRole != null && (!userRole.equalsIgnoreCase(USER_ROLE_ADMIN) ||
+                !serviceRole.equalsIgnoreCase(SERVICE_ROLE))) {
             throw new UnAuthorisedAccessException("You do not have sufficient access for this service");
         }
         var loan = loanRepositoryManager.getLoan(loanAccount);
@@ -77,4 +79,15 @@ public class LoanService {
         loanRepositoryManager.updateLoan(loan);
     }
 
+    public void updateRepaymentStatus(String username, String userRole, String serviceRole,
+                                      Repayment repayment) {
+        if (repayment.getStatus() == null) {
+            throw new InvalidInputException("Unknown value for RepaymentStatus");
+        }
+        if ((userRole != null && (!userRole.equalsIgnoreCase(USER_ROLE_ADMIN))
+                || (serviceRole!=null && !serviceRole.equalsIgnoreCase(SERVICE_ROLE) )) ) {
+            throw new UnAuthorisedAccessException("You do not have sufficient access for this service");
+        }
+        repaymentsRepositoryManager.updateRepayment(repayment, username);
+    }
 }

@@ -1,6 +1,8 @@
 package com.miniaspire.user.service;
 
+import com.miniaspire.user.dto.RegisterUser;
 import com.miniaspire.user.dto.User;
+import com.miniaspire.user.exception.InvalidInputException;
 import com.miniaspire.user.repository.UserRepositoryManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -36,16 +38,16 @@ public class MiniAspireUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found : " + username));
     }
 
-    public void registerUser(User user) {
+    public void registerUser(RegisterUser registerUser) {
 
-        if (userRepositoryManager.getUser(user.getLoginId()).isPresent()) {
-            throw new RuntimeException("LoginId is not available");
+        if (userRepositoryManager.getUser(registerUser.getLoginId()).isPresent()) {
+            throw new InvalidInputException("LoginId is not available");
         }
 
-        user.setPassword(passwordEncoder
-                .encode(user.getPassword()));
+        registerUser.setPassword(passwordEncoder
+                .encode(registerUser.getPassword()));
         try {
-            userRepositoryManager.saveUser(user);
+            userRepositoryManager.saveUser(User.from(registerUser));
         } catch (Exception e) {
             throw new RuntimeException("LoginId is not available");
         }

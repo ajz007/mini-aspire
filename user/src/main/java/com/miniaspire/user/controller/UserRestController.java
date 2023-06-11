@@ -1,6 +1,7 @@
 package com.miniaspire.user.controller;
 
 import com.miniaspire.user.dto.AuthRequest;
+import com.miniaspire.user.dto.RegisterUser;
 import com.miniaspire.user.dto.User;
 import com.miniaspire.user.service.MiniAspireUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +34,8 @@ public class UserRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody User user) {
-        userService.registerUser(user);
+    public ResponseEntity<String> register(@RequestBody RegisterUser registerUser) {
+        userService.registerUser(registerUser);
         return new ResponseEntity<String>("User Created", HttpStatus.CREATED);
     }
 

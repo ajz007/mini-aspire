@@ -2,6 +2,7 @@ package com.miniaspire.loan.exceptions.exceptionhandler;
 
 import com.miniaspire.loan.exceptions.InvalidInputException;
 import com.miniaspire.loan.exceptions.TechnicalUnExpectedException;
+import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +23,7 @@ public class LoanExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleException(
             RuntimeException ex, WebRequest request) {
 
-        LOGGER.error(ex.toString());
+        LOGGER.error("Exception:", ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -32,7 +33,7 @@ public class LoanExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleRuntimeException(
             RuntimeException ex, WebRequest request) {
 
-        LOGGER.error(ex.toString());
+        LOGGER.error("Exception:", ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -42,7 +43,7 @@ public class LoanExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleInvalidInputException(
             InvalidInputException ex, WebRequest request) {
 
-        LOGGER.error(ex.toString());
+        LOGGER.error("Exception:", ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -52,9 +53,19 @@ public class LoanExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleTechnicalUnExpectedException(
             TechnicalUnExpectedException ex, WebRequest request) {
 
-        LOGGER.error(ex.toString());
+        LOGGER.error("Exception:", ex);
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    @ExceptionHandler(value
+            = { UnAuthorisedAccessException.class })
+    protected ResponseEntity<Object> handleUnAuthorisedAccessException(
+            UnAuthorisedAccessException ex, WebRequest request) {
+
+        LOGGER.error("Exception:", ex);
+        return handleExceptionInternal(ex, ex.getMessage(),
+                new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
 }

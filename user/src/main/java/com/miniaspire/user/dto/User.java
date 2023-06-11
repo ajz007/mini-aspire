@@ -11,8 +11,13 @@ import lombok.NoArgsConstructor;
 public class User {
     private String username;
     private String loginId;
-    @JsonIgnore
+    @JsonIgnore()
     private String password;
     private String email;
     private UserRole userRole;
+
+    public static User from(RegisterUser registerUser) {
+        return new User(registerUser.getUsername(), registerUser.getLoginId(),
+                registerUser.getPassword(), registerUser.getEmail(), registerUser.getUserRole());
+    }
 }

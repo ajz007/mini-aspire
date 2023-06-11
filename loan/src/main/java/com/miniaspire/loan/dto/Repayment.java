@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +15,8 @@ import java.util.Objects;
 @EqualsAndHashCode
 public class Repayment {
 
-    //private int loanId;
+    //@JsonIgnore
+    private int id;
 
     private BigDecimal amount;
 

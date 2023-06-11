@@ -9,7 +9,6 @@ import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ServerWebExchange;
@@ -33,7 +32,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
             if (validator.isSecured.test(exchange.getRequest())) {
                 //header contains token or not
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
-                    throw new RuntimeException("Please login to the application");
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(403), "Please login to continue");
                 }
 
                 String authHeader = exchange.getRequest().getHeaders().get(HttpHeaders.AUTHORIZATION).get(0);
@@ -44,8 +43,7 @@ public class AuthFilter extends AbstractGatewayFilterFactory<AuthFilter.Config> 
                     var claims = jwtUtil.validateToken(authHeader);
                     updateHeaders(claims, exchange);
                 } catch (Exception e) {
-                    //throw new RuntimeException("Unauthorized access or token expired. Please login. " + e.getMessage());
-                    throw new ResponseStatusException(HttpStatusCode.valueOf(403));
+                    throw new ResponseStatusException(HttpStatusCode.valueOf(403), "Please login to continue");
                 }
             }
             return chain.filter(exchange);

@@ -26,6 +26,12 @@ spring:
           uri: lb://AUTH
           predicates:
             - Path=/auth/**
+        - id: paymentServiceId
+          uri: lb://PAYMENT
+          predicates:
+            - Path=/payment/**
+          filters:
+            - AuthFilter
 springdoc:
   enable-native-support: true
   api-docs:
@@ -47,3 +53,6 @@ springdoc:
       - url: /auth/v3/api-docs
         name: Auth Service
         primaryName: Auth Service
+      - url: /payment/v3/api-docs
+        name: Payment Service
+        primaryName: Payment Service
