@@ -16,7 +16,7 @@ public class PaymentEntity {
     @Column(name = "loan_account")
     public String loanAccount;
 
-    @Column(name = "repayment_id")
+    @Column(name = "repayment_id", unique = true)
     public int repaymentId;
 
     @Column

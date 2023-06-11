@@ -5,6 +5,8 @@ import com.miniaspire.loan.exceptions.InvalidInputException;
 import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.loan.repository.LoanRepositoryManager;
 import com.miniaspire.loan.repository.RepaymentsRepositoryManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +16,8 @@ public class LoanService {
 
     private static final String USER_ROLE_ADMIN = "ADMIN";
     private static final String USER_ROLE_CUSTOMER = "USER";
-    private static final String SERVICE_ROLE = "true";
+    private static final String SERVICE_ROLE_VAL = "true";
+    private static final String NOT_SUFF_ACCESS = "You do not have sufficient access for this service";
 
     private final LoanRepositoryManager loanRepositoryManager;
     private final RepaymentsRepositoryManager repaymentsRepositoryManager;
@@ -34,7 +37,7 @@ public class LoanService {
         } else if (userRole != null && userRole.equalsIgnoreCase(USER_ROLE_ADMIN)) {
             return loanRepositoryManager.getAllLoans();
         }
-        throw new UnAuthorisedAccessException("You do not have sufficient access to this service");
+        throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
     }
 
     public Loan getLoan(String username, String userRole, String loanAccount) {
@@ -47,7 +50,7 @@ public class LoanService {
 
     public LoanCreateRes createLoan(Loan loan) {
         if (!loan.getUserRole().equalsIgnoreCase(USER_ROLE_CUSTOMER)) {
-            throw new UnAuthorisedAccessException("You do not have sufficient access for this service");
+            throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
         }
         var repayments = repaymentsManager
                 .createRepayments(loan, RepaymentFrequency.WEEKLY);
@@ -70,13 +73,12 @@ public class LoanService {
         if (loanStatus == null) {
             throw new InvalidInputException("Unknown value for LoanStatus");
         }
-        if (userRole != null && (!userRole.equalsIgnoreCase(USER_ROLE_ADMIN) ||
-                !serviceRole.equalsIgnoreCase(SERVICE_ROLE))) {
-            throw new UnAuthorisedAccessException("You do not have sufficient access for this service");
+        if (!(userRole.equalsIgnoreCase(USER_ROLE_ADMIN)
+                || (serviceRole != null && serviceRole.equalsIgnoreCase(SERVICE_ROLE_VAL)))) {
+            throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
         }
-        var loan = loanRepositoryManager.getLoan(loanAccount);
-        loan.setStatus(LoanStatus.valueOf(loanStatus));
-        loanRepositoryManager.updateLoan(loan);
+
+        loanRepositoryManager.updateLoanStatus(loanAccount, LoanStatus.valueOf(loanStatus).getValue());
     }
 
     public void updateRepaymentStatus(String username, String userRole, String serviceRole,
@@ -84,9 +86,9 @@ public class LoanService {
         if (repayment.getStatus() == null) {
             throw new InvalidInputException("Unknown value for RepaymentStatus");
         }
-        if ((userRole != null && (!userRole.equalsIgnoreCase(USER_ROLE_ADMIN))
-                || (serviceRole!=null && !serviceRole.equalsIgnoreCase(SERVICE_ROLE) )) ) {
-            throw new UnAuthorisedAccessException("You do not have sufficient access for this service");
+        if (!(userRole.equalsIgnoreCase(USER_ROLE_ADMIN)
+                || (serviceRole != null && serviceRole.equalsIgnoreCase(SERVICE_ROLE_VAL)))) {
+            throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
         }
         repaymentsRepositoryManager.updateRepayment(repayment, username);
     }

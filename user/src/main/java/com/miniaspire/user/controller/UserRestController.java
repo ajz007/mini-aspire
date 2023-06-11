@@ -29,20 +29,18 @@ public class UserRestController {
 
     @GetMapping("/{loginId}")
     public ResponseEntity<User> getUser(@PathVariable String loginId) {
-        //TODO: Throw exception if not found
         return ResponseEntity.ok(userService.getUser(loginId));
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterUser registerUser) {
         userService.registerUser(registerUser);
-        return new ResponseEntity<String>("User Created", HttpStatus.CREATED);
+        return new ResponseEntity<>("User Created", HttpStatus.CREATED);
     }
 
     @PostMapping("/validate")
     public ResponseEntity<String> validateCredentials(@RequestBody AuthRequest authRequest) {
-        if(userService.validate(authRequest
-                .getUsername(), authRequest.getPassword())) {
+        if (userService.validate(authRequest.getUsername(), authRequest.getPassword())) {
             return ResponseEntity.ok("User is valid");
         } else {
             return ResponseEntity.badRequest().body("Invalid User");

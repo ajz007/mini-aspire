@@ -1,5 +1,7 @@
 package com.miniaspire.payment.dto;
 
+import com.miniaspire.payment.exceptions.InvalidInputException;
+
 public enum RepaymentStatus {
     PENDING(0), PAID(1);
 
@@ -10,11 +12,14 @@ public enum RepaymentStatus {
     }
 
     public static RepaymentStatus fromValue(int status) {
-        switch(status) {
-            case 0: return PENDING;
-            case 1: return PAID;
+        switch (status) {
+            case 0:
+                return PENDING;
+            case 1:
+                return PAID;
+            default:
+                throw new InvalidInputException("Unknown value for RepaymentStatus");
         }
-        throw new RuntimeException("Unknown value for RepaymentStatus");
     }
 
     public int getValue() {

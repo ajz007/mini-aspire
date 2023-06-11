@@ -1,21 +1,23 @@
 echo off
 
-echo "\tStarting all the services. Assuming maven build is already complete and executeable jars reside in target folder\n\n"
-echo "\tStart up order\n"
+echo "Starting all the services. Assuming maven build is already complete and executeable jars reside in target folder"
+echo "Start up order"
 
 
-echo "\t 1. DISCOVERY-SERVER \n"
+echo " 1. DISCOVERY-SERVER "
 
-echo "\t API-GATEWAY \n"
+echo " 2. API-GATEWAY "
 
-echo "\t AUTH \n"
+echo " 3. AUTH "
 
-echo "\t USER \n"
+echo " 4. USER "
 
-echo "\t LOAN \n"
+echo " 5. LOAN "
+
+echo " 6. PAYMENT "
 
 
-echo "Starting discovery-server .. \n"
+echo "Starting discovery-server .. "
 
 
 cd discovery-server/target
@@ -23,18 +25,18 @@ for /f "delims=" %%x in ('dir /od /b discovery-server*.jar') do set latestjar=%%
 start cmd /k java -jar %latestjar%
 echo "server starting in different window"
 
-echo "wait for discovery-server to start .. \n"
+echo "wait for discovery-server to start .. "
 
 //hack to wait for 10 seconds
 ping -n 10 127.0.0.1 > nul
 cd ../../
 
-echo "Starting api-gateway .. \n"
+echo "Starting api-gateway .. "
 
 cd api-gateway/target
 for /f "delims=" %%x in ('dir /od /b api-gateway*.jar') do set latestjar=%%x
 start cmd /k java -jar %latestjar%
-echo "server starting in different window \n"
+echo "server starting in different window "
 cd ../../
 
 
@@ -43,7 +45,7 @@ echo "Starting auth .."
 cd auth/target
 for /f "delims=" %%x in ('dir /od /b auth*.jar') do set latestjar=%%x
 start cmd /k java -jar %latestjar%
-echo "server starting in different window \n"
+echo "server starting in different window "
 cd ../../
 
 
@@ -52,7 +54,7 @@ echo "Starting user .."
 cd user/target
 for /f "delims=" %%x in ('dir /od /b user*.jar') do set latestjar=%%x
 start cmd /k java -jar %latestjar%
-echo "server starting in different window \n"
+echo "server starting in different window "
 cd ../../
 
 
@@ -61,8 +63,16 @@ echo "Starting loan .."
 cd loan/target
 for /f "delims=" %%x in ('dir /od /b loan*.jar') do set latestjar=%%x
 start cmd /k java -jar %latestjar%
-echo "server starting in different window \n"
+echo "server starting in different window "
+cd ../../
+
+echo "Starting payment .."
+
+cd payment/target
+for /f "delims=" %%x in ('dir /od /b payment*.jar') do set latestjar=%%x
+start cmd /k java -jar %latestjar%
+echo "server starting in different window "
 cd ../../
 
 
-cmd /k ipconfig
+cmd /k echo "Done!"

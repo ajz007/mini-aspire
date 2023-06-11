@@ -6,7 +6,11 @@ import com.miniaspire.payment.dto.RepaymentStatus;
 import com.miniaspire.payment.exceptions.InvalidInputException;
 import com.miniaspire.payment.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.payment.repository.PaymentRepositoryManager;
-import org.springframework.http.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +24,8 @@ public class PaymentService {
 
     private static final String USER_NAME = "x-user_name";
     private static final String USER_ROLE = "x-user_role";
-    private static final String SERVICE_ROLE = "true";
+    private static final String SERVICE_ROLE = "service_role";
+    private static final Logger LOG = LoggerFactory.getLogger(PaymentService.class);
 
     private final PaymentRepositoryManager paymentRepositoryManager;
     private final RestTemplate restTemplate;
@@ -42,9 +47,10 @@ public class PaymentService {
 
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
+        LOG.info("Get all repayments for loan account "+paymentRequest.getLoanAccount());
         //get all repayments This also validates if the loan account belongs to user. if not throw exception -- should happen in LOAN
         var repayments = restTemplate
-                .exchange("http://LOAN/loan/repayments/" + paymentRequest.getLoanAccount()+"?repaymentStatus=PENDING",
+                .exchange("http://LOAN/loan/repayments/" + paymentRequest.getLoanAccount() + "?repaymentStatus=PENDING",
                         HttpMethod.GET, entity, Repayment[].class);
 
         if (Optional.ofNullable(repayments.getBody()).orElse(new Repayment[0]).length == 0) {
@@ -65,6 +71,7 @@ public class PaymentService {
         updateRepaymentStatus(username, userRole, scheduledRepayment);
 
         //TODO: Find remaining balance and adjust, update the next repayment amount
+
 
         //check if all repayments are paid
         //Update loan status to paid
@@ -94,6 +101,7 @@ public class PaymentService {
     private void executePayment(PaymentRequest paymentRequest, Repayment repayment, String username) {
         paymentRequest.setPaidBy(username);
         paymentRequest.setRepaymentId(repayment.getId());
+        LOG.info("Creating a repayment payment of  "+ repayment.getAmount() + "for loan account "+paymentRequest.getLoanAccount());
         paymentRepositoryManager.createPayment(paymentRequest);
     }
 
@@ -105,18 +113,15 @@ public class PaymentService {
      * @param scheduledRepayment
      */
     private void updateRepaymentStatus(String username, String userRole, Repayment scheduledRepayment) {
-      /*  HttpHeaders headers = new HttpHeaders();
+        HttpHeaders headers = new HttpHeaders();
         headers.set(USER_NAME, username);
         headers.set(USER_ROLE, userRole);
         headers.set(SERVICE_ROLE, "true");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        //HttpEntity<String> entity = new HttpEntity<>("body", headers);
-        HttpEntity<Repayment> requestUpdate = new HttpEntity<>(scheduledRepayment, headers);*/
+        HttpEntity<Repayment> requestUpdate = new HttpEntity<>(scheduledRepayment, headers);
 
-       /* restTemplate.put("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
-                scheduledRepayment);*/
-        restTemplate.put("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
-                HttpMethod.PUT, Void.class, scheduledRepayment);
+        LOG.info("Update Repayment status to PAID for repayment id "+ scheduledRepayment.getId());
+        restTemplate.exchange("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
+                HttpMethod.PUT, requestUpdate, String.class);
     }
 
     /**
@@ -140,6 +145,8 @@ public class PaymentService {
         headers.set(SERVICE_ROLE, "true");
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
-        restTemplate.put("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED", entity);
+        LOG.info("Update Loan status for account "+ paymentRequest.getLoanAccount() +" to CLOSED");
+        restTemplate.exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED",
+                HttpMethod.PUT, entity, String.class);
     }
 }

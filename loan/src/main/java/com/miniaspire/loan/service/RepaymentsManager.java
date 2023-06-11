@@ -19,7 +19,7 @@ public class RepaymentsManager {
 
     public Set<Repayment> createRepayments(Loan loan, RepaymentFrequency repaymentFrequency) {
 
-        if(loan == null) throw new IllegalArgumentException();
+        if (loan == null) throw new IllegalArgumentException();
 
         BigDecimal repayAmount = loan.getLoanAmount()
                 .divide(BigDecimal.valueOf(loan.getTerm()), 6, RoundingMode.HALF_UP);

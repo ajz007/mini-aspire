@@ -1,13 +1,6 @@
 package com.miniaspire.user.config;
 
 import com.miniaspire.user.service.MiniAspireUserDetailsService;
-import io.swagger.v3.oas.models.Components;
-import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
-import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.servers.Server;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,34 +16,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 public class UserSecurityConfig {
 
     @Bean
     @LoadBalanced
-    public RestTemplate template(){
+    public RestTemplate template() {
         return new RestTemplate();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new MiniAspireUserDetailsService();
     }
 
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers("/user/register", "/user/validate").permitAll()
-                .requestMatchers("/user/swagger-ui.html","user/v3/api-docs/swagger-config", "user/v3/api-docs").permitAll()
-                .requestMatchers("/h2-console", "/h2-console/*").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .build();
+        return http.csrf().disable().authorizeHttpRequests().requestMatchers("/user/register", "/user/validate").permitAll().requestMatchers("/user/swagger-ui.html", "user/v3/api-docs/swagger-config", "user/v3/api-docs").permitAll().requestMatchers("/h2-console", "/h2-console/*").permitAll().anyRequest().permitAll().and().build();
     }
 
     @Bean
@@ -59,8 +43,8 @@ public class UserSecurityConfig {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider(){
-        DaoAuthenticationProvider authenticationProvider=new DaoAuthenticationProvider();
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;

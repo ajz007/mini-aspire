@@ -9,20 +9,20 @@ mini-aspire is a basic loan application backend where users can largely do the f
 The apis are exposed via open api.
 
 # Table of contents
-1. [Configs](##Configs)
-2. [Build and Run](##Build and Run)
+1. [Configs](#Configs)
+2. [Build and Run](#Build and Run)
    1. [Windows](##Windows)
    2. [Linux](##Linux)
    3. [URLs](##urls)
-3. [Architecture](##Architecture)
-4. [Basic Functional Flow](##Basic Functional Flow)
-5. [Design choices](##Design choices)
-   1. [Monolith vs Microservices](#Monolith vs Microservices)
-   2. [RDBMS vs NoSQL](#RDBMS vs NoSQL)
-   3. [Microservices Design Patterns implemented](#Microservices Design Patterns implemented)
+3. [Architecture](#Architecture)
+4. [Basic Functional Flow](#Basic Functional Flow)
+5. [Design choices](#Design choices)
+   1. [Monolith vs Microservices](##Monolith vs Microservices)
+   2. [RDBMS vs NoSQL](##RDBMS vs NoSQL)
+   3. [Microservices Design Patterns implemented](##Microservices Design Patterns implemented)
 
 
-##Configs
+#Configs
 1. Databse
     1. The database used here is H2 which is an in-memory database but also supports saving the file to the local disk
     2. To update the config, go to <module>/src/main/resources/application.properties
@@ -33,7 +33,7 @@ The apis are exposed via open api.
        Above configuration is for Loan DB and data would be saved at D:/data/loan
        Please give different part for each module database
    
-# Build and Run
+#Build and Run
 
 ##Windows
    1. To build the project

@@ -1,6 +1,6 @@
 package com.miniaspire.loan.dto;
 
-import org.springframework.stereotype.Component;
+import com.miniaspire.loan.exceptions.InvalidInputException;
 
 public enum RepaymentFrequency {
     WEEKLY(0);
@@ -12,10 +12,12 @@ public enum RepaymentFrequency {
     }
 
     public static RepaymentFrequency fromValue(int value) {
-        switch(value) {
-            case 0: return WEEKLY;
+        switch (value) {
+            case 0:
+                return WEEKLY;
+            default:
+                throw new InvalidInputException("Unknown value for RepaymentFrequency");
         }
-        throw new RuntimeException("Unknown value for RepaymentFrequency");
     }
 
     public int getValue() {

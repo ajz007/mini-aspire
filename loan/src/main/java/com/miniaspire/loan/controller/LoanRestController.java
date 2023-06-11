@@ -22,10 +22,8 @@ public class LoanRestController {
     public final LoanService loanService;
     private static final String USER_NAME = "x-user_name";
     private static final String USER_ROLE = "x-user_role";
-    private static final String SERVICE_ROLE = "true";
+    private static final String SERVICE_ROLE = "service_role";
     private static final String EX_MSG = "Please login to continue";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoanRestController.class);
 
     LoanRestController(LoanService loanService) {
         this.loanService = loanService;
@@ -44,14 +42,20 @@ public class LoanRestController {
     @GetMapping("/{loanAccount}")
     public ResponseEntity<Loan> getLoan(@PathVariable String loanAccount,
                                         @RequestHeader Map<String, String> headers) {
+        if (headers.get(USER_NAME) == null || headers.get(USER_ROLE) == null) {
+            throw new UnAuthorisedAccessException(EX_MSG);
+        }
         return ResponseEntity.ok().body(loanService.getLoan(headers
                 .get(USER_NAME), headers.get(USER_ROLE), loanAccount));
     }
 
-    @PatchMapping("/{loanAccount}")
+    @PutMapping("/{loanAccount}")
     public ResponseEntity<String> updateLoanStatus(@PathVariable String loanAccount,
                                                    @RequestParam String loanStatus,
                                                    @RequestHeader Map<String, String> headers) {
+        if (headers.get(USER_NAME) == null || headers.get(USER_ROLE) == null) {
+            throw new UnAuthorisedAccessException(EX_MSG);
+        }
         loanService.updateLoanStatus(headers.get(USER_ROLE), headers.get(SERVICE_ROLE), loanAccount, loanStatus);
 
         return ResponseEntity.ok("Loan Status updated with " + loanStatus);
@@ -95,10 +99,9 @@ public class LoanRestController {
     public ResponseEntity<List<Repayment>> getRepayments(@PathVariable String loanAccount,
                                                          @RequestParam(required = false) String repaymentStatus,
                                                          @RequestHeader Map<String, String> headers) {
-        var res = loanService
-                .getRepayments(headers.get(USER_NAME), headers.get(USER_ROLE), loanAccount, repaymentStatus);
-        LOGGER.info(res.toString());
-        return ResponseEntity.ok(res);
+
+        return ResponseEntity.ok(loanService
+                .getRepayments(headers.get(USER_NAME), headers.get(USER_ROLE), loanAccount, repaymentStatus));
     }
 
     @PutMapping("/repayments/{id}")
@@ -106,10 +109,6 @@ public class LoanRestController {
                                                   @RequestBody Repayment repayment,
                                                   @RequestHeader Map<String, String> headers) {
 
-        //remove this
-        headers.put(USER_ROLE,"ADMIN");
-        headers.put(USER_NAME,"");
-        headers.put(SERVICE_ROLE,"true");
         if (headers.get(USER_NAME) == null || headers.get(USER_ROLE) == null) {
             throw new UnAuthorisedAccessException(EX_MSG);
         }

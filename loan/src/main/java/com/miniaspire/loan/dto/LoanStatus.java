@@ -1,5 +1,7 @@
 package com.miniaspire.loan.dto;
 
+import com.miniaspire.loan.exceptions.InvalidInputException;
+
 public enum LoanStatus {
     PENDING(0), APPROVED(1), CLOSED(2);
 
@@ -14,8 +16,9 @@ public enum LoanStatus {
             case 0: return PENDING;
             case 1: return APPROVED;
             case 2: return CLOSED;
+            default: throw new InvalidInputException("Unknown value for LoanStatus");
         }
-        throw new RuntimeException("Unknown value for LoanStatus");
+
     }
 
     public int getValue() {
