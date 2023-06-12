@@ -150,7 +150,7 @@ The choice of H2 is purely for ease of development and deployment for anybody wh
    2. Loan -- Handling loan creation, checking repayments etc
    3. Payments -- Handling the payments of the due repayments
    4. Auth -- For authentication
-2. Visibility and Dynamic scale up and scale down
+2. Service Discovery
    1. In order for the microservices to be able to independently scale up and scale down, the microservices must be:
       1. Stateless -- To implement this, we are not maintaining any sessions on each micro-service. 
          Without the presence of session, we must have a way to identify a user and if he is logged in. For this, we are going ahead with JWT tokens.
@@ -162,3 +162,18 @@ The choice of H2 is purely for ease of development and deployment for anybody wh
    1. In order to avoid client to have to find out individual microservices and communicate with each of them, we use a gateway layer which becomes a central point of contact for any client.
    2. The gateway would get the address of the specific microservice from registry and forward the request to that service.
    3. The gateway also does load balancing, rate limiting, authentication, authorization etc
+4. Distributed transactions
+   1. For our usecase where we are doing a repayment, the transaction involves two services
+      1. Loans
+      2. Payment
+   Therefore, we need to ensure that the transactions are completed completely/rolledback.
+   There are largely two ways to handle the distributed transactions in microservices:
+         1. Service Choreography
+            Choreography is an event driven approach for achieving eventual consistency using a message broker. This is a really nice and clean way to achieve distributed transactions. 
+            Also, since the process is async due to message broken, the overall perfomance is faster.
+            The problem with this approach comes when there are too many events for identifying one unit of work. It becomes increasingly difficult to put all the pieces together and
+            becomes difficult to debug the issue.
+         2. Service Orchestration
+            In this pattern, we have one controller service which knows about all the involved transactions and microservices and ensures that the overall transaction status is not inconsistent.
+            For, the current application, I would be taking this approach where the Payment microservice acts as a controller. To start with I am only taking care of the sunny day transactions, due to time constraint :).
+            I will try to introduce rollback in future versions of the application.
