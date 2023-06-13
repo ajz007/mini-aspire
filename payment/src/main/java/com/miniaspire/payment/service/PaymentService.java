@@ -1,8 +1,6 @@
 package com.miniaspire.payment.service;
 
-import com.miniaspire.payment.dto.PaymentRequest;
-import com.miniaspire.payment.dto.Repayment;
-import com.miniaspire.payment.dto.RepaymentStatus;
+import com.miniaspire.payment.dto.*;
 import com.miniaspire.payment.exceptions.InvalidInputException;
 import com.miniaspire.payment.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.payment.repository.PaymentRepositoryManager;
@@ -41,41 +39,33 @@ public class PaymentService {
         if (userRole.equalsIgnoreCase("ADMIN")) {
             throw new UnAuthorisedAccessException("You do not have access to this service");
         }
-        HttpHeaders headers = new HttpHeaders();
-        headers.set(USER_NAME, username);
-        headers.set(USER_ROLE, userRole);
 
-        HttpEntity<String> entity = new HttpEntity<>("body", headers);
+        validateLoanStatus(paymentRequest, username, userRole);
 
-        LOG.info("Get all repayments for loan account "+paymentRequest.getLoanAccount());
-        //get all repayments This also validates if the loan account belongs to user. if not throw exception -- should happen in LOAN
-        var repayments = restTemplate
-                .exchange("http://LOAN/loan/repayments/" + paymentRequest.getLoanAccount() + "?repaymentStatus=PENDING",
-                        HttpMethod.GET, entity, Repayment[].class);
+        var repayments = getRepayments(paymentRequest, username, userRole);
 
-        if (Optional.ofNullable(repayments.getBody()).orElse(new Repayment[0]).length == 0) {
+        if (Optional.ofNullable(repayments).orElse(new Repayment[0]).length == 0) {
             throw new InvalidInputException("No payments pending!");
         }
         //get the next pending repayment from repayment list-- filter here
-        var scheduledRepayment = getScheduledRepayment(repayments.getBody());
+        var scheduledRepayment = getScheduledRepayment(repayments);
 
         //validate if the amount is greater or equal to the emi
         //validate amount should not be greater than all remaining amount
-        validateAmount(repayments.getBody(), scheduledRepayment, paymentRequest);
+        validateAmount(repayments, scheduledRepayment, paymentRequest);
 
         //update the payment (history). Entire payment is history
         executePayment(paymentRequest, scheduledRepayment, username);
 
-        //update the specific repayment status (ensure a service in loan for this) -- LOAN
+        //update the specific repayment status
         scheduledRepayment.setStatus(RepaymentStatus.PAID); //TODO: create a deep clone
         updateRepaymentStatus(username, userRole, scheduledRepayment);
 
         //TODO: Find remaining balance and adjust, update the next repayment amount
 
-
         //check if all repayments are paid
         //Update loan status to paid
-        updateLoanStatus(repayments.getBody(), paymentRequest, username, userRole);
+        updateLoanStatus(repayments, paymentRequest, username, userRole);
     }
 
 
@@ -101,7 +91,7 @@ public class PaymentService {
     private void executePayment(PaymentRequest paymentRequest, Repayment repayment, String username) {
         paymentRequest.setPaidBy(username);
         paymentRequest.setRepaymentId(repayment.getId());
-        LOG.info("Creating a repayment payment of  "+ repayment.getAmount() + "for loan account "+paymentRequest.getLoanAccount());
+        LOG.info("Creating a repayment payment of  " + repayment.getAmount() + "for loan account " + paymentRequest.getLoanAccount());
         paymentRepositoryManager.createPayment(paymentRequest);
     }
 
@@ -119,7 +109,7 @@ public class PaymentService {
         headers.set(SERVICE_ROLE, "true");
         HttpEntity<Repayment> requestUpdate = new HttpEntity<>(scheduledRepayment, headers);
 
-        LOG.info("Update Repayment status to PAID for repayment id "+ scheduledRepayment.getId());
+        LOG.info("Update Repayment status to PAID for repayment id " + scheduledRepayment.getId());
         restTemplate.exchange("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
                 HttpMethod.PUT, requestUpdate, String.class);
     }
@@ -145,8 +135,37 @@ public class PaymentService {
         headers.set(SERVICE_ROLE, "true");
         HttpEntity<String> entity = new HttpEntity<>("body", headers);
 
-        LOG.info("Update Loan status for account "+ paymentRequest.getLoanAccount() +" to CLOSED");
+        LOG.info("Update Loan status for account " + paymentRequest.getLoanAccount() + " to CLOSED");
         restTemplate.exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED",
                 HttpMethod.PUT, entity, String.class);
+    }
+
+    private void validateLoanStatus(PaymentRequest paymentRequest, String username, String userRole) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(USER_NAME, username);
+        headers.set(USER_ROLE, userRole);
+
+        HttpEntity<String> entity = new HttpEntity<>("body", headers);
+
+        var loan = restTemplate
+                .exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount(),
+                        HttpMethod.GET, entity, Loan.class);
+
+        if (Optional.ofNullable(loan.getBody()).isPresent() && !loan.getBody().getStatus().equals(LoanStatus.APPROVED)) {
+            throw new InvalidInputException("Repayment cannot be initiated until the loan is APPROVED");
+        }
+    }
+
+    private Repayment[] getRepayments(PaymentRequest paymentRequest, String username, String userRole) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(USER_NAME, username);
+        headers.set(USER_ROLE, userRole);
+
+        HttpEntity<String> entity = new HttpEntity<>("body", headers);
+
+        LOG.info("Get all repayments for loan account " + paymentRequest.getLoanAccount());
+        return restTemplate
+                .exchange("http://LOAN/loan/repayments/" + paymentRequest.getLoanAccount() + "?repaymentStatus=PENDING",
+                        HttpMethod.GET, entity, Repayment[].class).getBody();
     }
 }

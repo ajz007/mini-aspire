@@ -8,5 +8,7 @@ class LoanApplicationTests {
 
     @Test
     void contextLoads() {
+        LoanApplication.main(new String[] {});
     }
+
 }

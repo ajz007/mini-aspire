@@ -8,6 +8,7 @@ class PaymentApplicationTests {
 
 	@Test
 	void contextLoads() {
+		PaymentApplication.main(new String[] {});
 	}
 
 }

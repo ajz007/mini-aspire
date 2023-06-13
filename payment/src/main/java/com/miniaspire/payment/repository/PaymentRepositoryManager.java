@@ -20,7 +20,7 @@ public class PaymentRepositoryManager {
 
     public void createPayment(PaymentRequest paymentRequest) {
         //validate if this repayment id already paid
-        if(paymentRepository.findByRepaymentId(paymentRequest.getRepaymentId()).isPresent()) {
+        if (paymentRepository.findByRepaymentId(paymentRequest.getRepaymentId()).isPresent()) {
             throw new InvalidInputException("Payment already done for the scheduled repayment. Reach out to customer care if the problem persists.");
         }
         try {

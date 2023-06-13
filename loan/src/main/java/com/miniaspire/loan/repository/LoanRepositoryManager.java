@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Repository
 public class LoanRepositoryManager {
 
-    private static final String LOAN_ACCT_DOES_NOT_EXIST = "Loan account does not exist";
+    private static final String LOAN_ACCT_DOES_NOT_EXIST = "Loan account not found";
     private static final Logger LOG = LoggerFactory.getLogger(LoanRepositoryManager.class);
     private final ILoanRepository loanRepository;
 
@@ -70,7 +70,7 @@ public class LoanRepositoryManager {
             throw new InvalidInputException("Loan account is already present");
         }
         try {
-            LOG.info("Creating loan account %s for user %s", loanRequest.getAccount(), loanRequest.getLoanId());
+            LOG.info("Creating loan account "+loanRequest.getAccount()+" for user "+loanRequest.getLoginId() );
             var loanEntity = loanRepository.save(getLoanEntity(loanRequest));
             return getLoan(loanEntity);
         } catch (Exception e) {
