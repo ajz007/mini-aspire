@@ -20,9 +20,9 @@ public class AuthExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value
-            = {RuntimeException.class})
-    protected ResponseEntity<Object> handleRuntimeException(
-            RuntimeException ex, WebRequest request) {
+            = {InvalidInputException.class})
+    protected ResponseEntity<Object> handleInvalidInputException(
+            InvalidInputException ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }

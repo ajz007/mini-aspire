@@ -170,7 +170,7 @@ The choice of H2 is purely for ease of development and deployment for anybody wh
    There are largely two ways to handle the distributed transactions in microservices:
          1. Service Choreography
             Choreography is an event driven approach for achieving eventual consistency using a message broker. This is a really nice and clean way to achieve distributed transactions. 
-            Also, since the process is async due to message broken, the overall perfomance is faster.
+            Also, since the process is async due to message broken, the overall performance is faster.
             The problem with this approach comes when there are too many events for identifying one unit of work. It becomes increasingly difficult to put all the pieces together and
             becomes difficult to debug the issue.
          2. Service Orchestration
