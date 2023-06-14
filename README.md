@@ -10,7 +10,7 @@ The apis are exposed via open api.
 
 # Table of contents
 1. [Configs](#Configs)
-2. [Build and Run](#BuildAndRun)
+2. [Build and Run](#build-and-run)
    1. [Windows](##Windows)
    2. [Linux](##Linux)
    3. [URLs](##urls)
@@ -22,7 +22,7 @@ The apis are exposed via open api.
    3. [Microservices Design Patterns implemented](##MicroservicesDesignPatternsImplemented)
 
 
-# <a name="Configs"></a> Configs
+#<a name="Configs"></a>Configs
 1. Database
     1. The database used here is H2 which is an in-memory database but also supports saving the file to the local disk
     2. To update the config, go to <module>/src/main/resources/application.properties
@@ -33,7 +33,7 @@ The apis are exposed via open api.
        Above configuration is for Loan DB and data would be saved at D:/data/loan
        Please give different part for each module database
 
-# <a name="BuildAndRun"></a> Build and Run
+# Build and Run
 
 ### <a name="Windows"></a> Windows
    1. To build the project
@@ -68,8 +68,7 @@ The apis are exposed via open api.
 
 # <a name="Architecture"></a> Architecture
 
-![img_1.png](microservice_arch.png)
-
+![alt text](https://github.com/ajz007/mini-aspire/blob/documentation/microservice_arch.png?raw=true)
 
 # <a name="BasicFunctionalFlow"></a> Basic Functional Flow
 
