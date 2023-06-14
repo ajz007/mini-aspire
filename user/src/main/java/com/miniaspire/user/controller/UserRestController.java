@@ -7,7 +7,9 @@ import com.miniaspire.user.dto.User;
 import com.miniaspire.user.exception.InvalidInputException;
 import com.miniaspire.user.service.MiniAspireUserDetailsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -33,7 +35,17 @@ public class UserRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = User[].class))}),
+                            array = @ArraySchema(schema = @Schema(implementation = User.class)),
+                            examples = {
+                                    @ExampleObject("""
+                                            [{
+                                              "username": "ajishu",
+                                              "loginId": "ajishu",
+                                              "email": "email.com",
+                                              "userRole": "USER"
+                                            }]""")
+                            }
+                    )}),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
                     content = @Content)})
     @GetMapping("")
@@ -60,7 +72,23 @@ public class UserRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User Created!",
                     content = {@Content(mediaType = "application/json",
-                            schema = @Schema(implementation = SuccessResponse.class))}),
+                            schema = @Schema(implementation = SuccessResponse.class),
+                            examples = {
+                                    @ExampleObject("""
+                                            {"username": "ajishu",
+                                            "loginId": "ajishu",
+                                            "password": "pass",
+                                            "email": "any@email.com",
+                                            "userRole": "USER"
+                                            }"""),
+                                    @ExampleObject("""
+                                              {"username": "admin",
+                                              "loginId": "admin",
+                                              "password": "pass",
+                                              "email": "admin@email.com",
+                                              "userRole": "ADMIN"
+                                            }"""),
+                            })}),
             @ApiResponse(responseCode = "400", description = "User not found",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
