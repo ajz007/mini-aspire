@@ -1,9 +1,6 @@
 package com.miniaspire.loan.controller;
 
-import com.miniaspire.loan.dto.Loan;
-import com.miniaspire.loan.dto.LoanCreateRequest;
-import com.miniaspire.loan.dto.LoanCreateRes;
-import com.miniaspire.loan.dto.Repayment;
+import com.miniaspire.loan.dto.*;
 import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.loan.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -72,13 +69,13 @@ public class LoanRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Loan Status updated with APPROVED",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = SuccessResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "Loan account not found",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
                     content = @Content)})
     @PutMapping("/{loanAccount}")
-    public ResponseEntity<String> updateLoanStatus(@PathVariable String loanAccount,
+    public ResponseEntity<SuccessResponse> updateLoanStatus(@PathVariable String loanAccount,
                                                    @RequestParam String loanStatus,
                                                    @RequestHeader Map<String, String> headers) {
         if (headers.get(USER_NAME) == null || headers.get(USER_ROLE) == null) {
@@ -86,7 +83,7 @@ public class LoanRestController {
         }
         loanService.updateLoanStatus(headers.get(USER_ROLE), headers.get(SERVICE_ROLE), loanAccount, loanStatus);
 
-        return ResponseEntity.ok("Loan Status updated with " + loanStatus);
+        return ResponseEntity.ok(new SuccessResponse("Loan Status updated with " + loanStatus));
     }
 
     @Operation(summary = "Get all loans for a user. Only allowed for ADMIN role")
@@ -155,13 +152,13 @@ public class LoanRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = SuccessResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "Unknown value for RepaymentStatus",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
                     content = @Content)})
     @PutMapping("/repayments/{id}")
-    public ResponseEntity<String> updateRepayment(@PathVariable String id,
+    public ResponseEntity<SuccessResponse> updateRepayment(@PathVariable String id,
                                                   @RequestBody Repayment repayment,
                                                   @RequestHeader Map<String, String> headers) {
 
@@ -170,7 +167,7 @@ public class LoanRestController {
         }
         loanService.updateRepaymentStatus(headers.get(USER_NAME),
                 headers.get(USER_ROLE), headers.get(SERVICE_ROLE), repayment);
-        return ResponseEntity.ok("Repayment updated");
+        return ResponseEntity.ok(new SuccessResponse("Repayment updated"));
     }
 
 }

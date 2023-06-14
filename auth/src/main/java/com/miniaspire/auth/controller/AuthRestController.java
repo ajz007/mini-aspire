@@ -2,6 +2,7 @@ package com.miniaspire.auth.controller;
 
 import com.miniaspire.auth.dto.AuthRequest;
 import com.miniaspire.auth.dto.AuthResponse;
+import com.miniaspire.auth.dto.SuccessResponse;
 import com.miniaspire.auth.exception.InvalidInputException;
 import com.miniaspire.auth.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -28,7 +29,7 @@ public class AuthRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Login Success!",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = AuthResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid credentials",
                     content = @Content)})
     @PostMapping("/login")
@@ -45,13 +46,13 @@ public class AuthRestController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Token is Valid",
                     content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                            schema = @Schema(implementation = SuccessResponse.class)) }),
             @ApiResponse(responseCode = "400", description = "JWT signature does not match locally computed signature. JWT validity cannot be asserted and should not be trusted.",
                     content = @Content)})
     @PostMapping("/validate")
-    public ResponseEntity<String> validateToken(@RequestParam("token") String token) {
+    public ResponseEntity<SuccessResponse> validateToken(@RequestParam("token") String token) {
         authService.validateToken(token);
-        return ResponseEntity.ok("Token is Valid");
+        return ResponseEntity.ok(new SuccessResponse("Token is Valid"));
     }
 
 }

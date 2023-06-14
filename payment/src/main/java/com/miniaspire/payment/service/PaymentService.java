@@ -111,7 +111,7 @@ public class PaymentService {
 
         LOG.info("Update Repayment status to PAID for repayment id " + scheduledRepayment.getId());
         restTemplate.exchange("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
-                HttpMethod.PUT, requestUpdate, String.class);
+                HttpMethod.PUT, requestUpdate, SuccessResponse.class);
     }
 
     /**
@@ -137,7 +137,7 @@ public class PaymentService {
 
         LOG.info("Update Loan status for account " + paymentRequest.getLoanAccount() + " to CLOSED");
         restTemplate.exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED",
-                HttpMethod.PUT, entity, String.class);
+                HttpMethod.PUT, entity, SuccessResponse.class);
     }
 
     private void validateLoanStatus(PaymentRequest paymentRequest, String username, String userRole) {

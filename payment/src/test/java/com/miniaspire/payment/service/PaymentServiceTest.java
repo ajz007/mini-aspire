@@ -1,9 +1,6 @@
 package com.miniaspire.payment.service;
 
-import com.miniaspire.payment.dto.Loan;
-import com.miniaspire.payment.dto.LoanStatus;
-import com.miniaspire.payment.dto.PaymentRequest;
-import com.miniaspire.payment.dto.Repayment;
+import com.miniaspire.payment.dto.*;
 import com.miniaspire.payment.repository.IPaymentRepository;
 import com.miniaspire.payment.repository.PaymentRepositoryManager;
 import com.miniaspire.payment.repository.entity.PaymentEntity;
@@ -77,10 +74,10 @@ public class PaymentServiceTest {
         Mockito.when(paymentRepository.findByRepaymentId(REPAYMENT_ID)).thenReturn(Optional.ofNullable(null));
 
         Mockito.when(restTemplate.exchange(Mockito.eq("http://LOAN/loan/repayments/" + REPAYMENT_ID),
-                Mockito.eq(HttpMethod.PUT), Mockito.any(), Mockito.same(String.class))).thenReturn(new ResponseEntity<>(new String(), HttpStatus.OK));
+                Mockito.eq(HttpMethod.PUT), Mockito.any(), Mockito.same(SuccessResponse.class))).thenReturn(new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK));
 
         Mockito.when(restTemplate.exchange(Mockito.eq("http://LOAN/loan/" + LOAN_ACCOUNT + "?loanStatus=" + "CLOSED"),
-                Mockito.eq(HttpMethod.PUT), Mockito.any(), Mockito.same(String.class))).thenReturn(new ResponseEntity<>(new String(), HttpStatus.OK));
+                Mockito.eq(HttpMethod.PUT), Mockito.any(), Mockito.same(SuccessResponse.class))).thenReturn(new ResponseEntity<>(new SuccessResponse(), HttpStatus.OK));
     }
 
     @Test
