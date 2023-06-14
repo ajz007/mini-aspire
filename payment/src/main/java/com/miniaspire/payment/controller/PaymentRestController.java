@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Book;
 import java.util.Map;
 
 @RestController
@@ -29,25 +28,14 @@ public class PaymentRestController {
     }
 
     @Operation(summary = "Pay the next scheduled repayment by the loan account")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Payment Success!",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PaymentResponse.class)) }),
-            @ApiResponse(responseCode = "400", description = "Loan account not found",
-                    content = @Content),
-            @ApiResponse(responseCode = "403", description = "Please login to continue",
-                    content = @Content)})
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Payment Success!", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = PaymentResponse.class))}), @ApiResponse(responseCode = "400", description = "Loan account not found", content = @Content), @ApiResponse(responseCode = "403", description = "Please login to continue", content = @Content)})
     @PostMapping("")
-    public ResponseEntity<PaymentResponse> createPayment(@RequestBody PaymentRequest paymentRequest,
-                                                         @RequestHeader Map<String, String> headers) {
-        if (headers.get(USER_NAME) == null && headers.get(USER_ROLE) == null
-                || headers.get(USER_ROLE).equalsIgnoreCase("ADMIN")) {
+    public ResponseEntity<PaymentResponse> createPayment(@RequestBody PaymentRequest paymentRequest, @RequestHeader Map<String, String> headers) {
+        if (headers.get(USER_NAME) == null && headers.get(USER_ROLE) == null || headers.get(USER_ROLE).equalsIgnoreCase("ADMIN")) {
             throw new UnAuthorisedAccessException("You are not authorised to view this or your session has expired.");
         }
         paymentService.createPayment(paymentRequest, headers.get(USER_NAME), headers.get(USER_ROLE));
 
-        return new ResponseEntity<>(new PaymentResponse(
-                paymentRequest.getAmount(),
-                "Payment Success!"), HttpStatus.CREATED);
+        return new ResponseEntity<>(new PaymentResponse(paymentRequest.getAmount(), "Payment Success!"), HttpStatus.CREATED);
     }
 }

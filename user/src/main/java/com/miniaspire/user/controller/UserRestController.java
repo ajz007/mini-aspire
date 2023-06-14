@@ -38,12 +38,8 @@ public class UserRestController {
                             array = @ArraySchema(schema = @Schema(implementation = User.class)),
                             examples = {
                                     @ExampleObject("""
-                                            [{
-                                              "username": "ajishu",
-                                              "loginId": "ajishu",
-                                              "email": "email.com",
-                                              "userRole": "USER"
-                                            }]""")
+                                            [{"username": "ajishu","loginId": "ajishu","email": "email.com","userRole": "USER"}]
+                                            """)
                             }
                     )}),
             @ApiResponse(responseCode = "403", description = "Please login to continue",

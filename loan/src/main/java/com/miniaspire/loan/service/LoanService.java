@@ -5,8 +5,6 @@ import com.miniaspire.loan.exceptions.InvalidInputException;
 import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.loan.repository.LoanRepositoryManager;
 import com.miniaspire.loan.repository.RepaymentsRepositoryManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,9 +21,7 @@ public class LoanService {
     private final RepaymentsRepositoryManager repaymentsRepositoryManager;
     private final RepaymentsManager repaymentsManager;
 
-    public LoanService(LoanRepositoryManager loanRepositoryManager,
-                       RepaymentsRepositoryManager repaymentsRepositoryManager,
-                       RepaymentsManager repaymentsManager) {
+    public LoanService(LoanRepositoryManager loanRepositoryManager, RepaymentsRepositoryManager repaymentsRepositoryManager, RepaymentsManager repaymentsManager) {
         this.loanRepositoryManager = loanRepositoryManager;
         this.repaymentsRepositoryManager = repaymentsRepositoryManager;
         this.repaymentsManager = repaymentsManager;
@@ -52,8 +48,7 @@ public class LoanService {
         if (!loan.getUserRole().equalsIgnoreCase(USER_ROLE_CUSTOMER)) {
             throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
         }
-        var repayments = repaymentsManager
-                .createRepayments(loan, RepaymentFrequency.WEEKLY);
+        var repayments = repaymentsManager.createRepayments(loan, RepaymentFrequency.WEEKLY);
         loan.setRepayments(repayments);
         var loanres = loanRepositoryManager.createLoan(loan);
 
@@ -68,26 +63,22 @@ public class LoanService {
         }
     }
 
-    public void updateLoanStatus(String userRole, String serviceRole, String loanAccount,
-                                 String loanStatus) {
+    public void updateLoanStatus(String userRole, String serviceRole, String loanAccount, String loanStatus) {
         if (loanStatus == null) {
             throw new InvalidInputException("Unknown value for LoanStatus");
         }
-        if (!(userRole.equalsIgnoreCase(USER_ROLE_ADMIN)
-                || (serviceRole != null && serviceRole.equalsIgnoreCase(SERVICE_ROLE_VAL)))) {
+        if (!(userRole.equalsIgnoreCase(USER_ROLE_ADMIN) || (serviceRole != null && serviceRole.equalsIgnoreCase(SERVICE_ROLE_VAL)))) {
             throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
         }
 
         loanRepositoryManager.updateLoanStatus(loanAccount, LoanStatus.valueOf(loanStatus).getValue());
     }
 
-    public void updateRepaymentStatus(String username, String userRole, String serviceRole,
-                                      Repayment repayment) {
+    public void updateRepaymentStatus(String username, String userRole, String serviceRole, Repayment repayment) {
         if (repayment.getStatus() == null) {
             throw new InvalidInputException("Unknown value for RepaymentStatus");
         }
-        if (!(userRole.equalsIgnoreCase(USER_ROLE_ADMIN)
-                || (serviceRole != null && serviceRole.equalsIgnoreCase(SERVICE_ROLE_VAL)))) {
+        if (!(userRole.equalsIgnoreCase(USER_ROLE_ADMIN) || (serviceRole != null && serviceRole.equalsIgnoreCase(SERVICE_ROLE_VAL)))) {
             throw new UnAuthorisedAccessException(NOT_SUFF_ACCESS);
         }
         repaymentsRepositoryManager.updateRepayment(repayment, username);

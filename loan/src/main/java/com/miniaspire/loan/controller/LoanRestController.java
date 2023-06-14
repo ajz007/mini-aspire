@@ -4,6 +4,8 @@ import com.miniaspire.loan.dto.*;
 import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.loan.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -38,11 +40,8 @@ public class LoanRestController {
                             array = @ArraySchema(schema = @Schema(implementation = Loan.class)),
                             examples = {
                                     @ExampleObject("""
-                                            [{
-                                            "account": "100002",
-                                            "loanAmount": 120000,
-                                            "term": 10
-                                            "}]""")
+                                            [{"account": "100002","loanAmount": 120000,"term": 10}]
+                                            """)
                             }
                     )}),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
@@ -76,7 +75,15 @@ public class LoanRestController {
                 .get(USER_NAME), headers.get(USER_ROLE), loanAccount));
     }
 
-    @Operation(summary = "Update the status of the loan")
+    @Operation(summary = "Update the status of the loan",
+            parameters = {
+                    @Parameter(
+                            in = ParameterIn.QUERY,
+                            name = "loanStatus",
+                            schema = @Schema(allowableValues =
+                                    {"PENDING", "APPROVED", "CLOSED"}),
+                            description = "description ")
+            })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Loan Status updated with APPROVED",
                     content = {@Content(mediaType = "application/json",
@@ -105,11 +112,8 @@ public class LoanRestController {
                             array = @ArraySchema(schema = @Schema(implementation = Loan.class)),
                             examples = {
                                     @ExampleObject("""
-                                            [{
-                                            "account": "100002",
-                                            "loanAmount": 120000,
-                                            "term": 10n" +
-                                            "}]""")
+                                            [{"account": "100002","loanAmount": 120000,"term": 10}]
+                                            """)
                             }
                     )}),
             @ApiResponse(responseCode = "400", description = "You do not have sufficient access for this service",
@@ -158,13 +162,8 @@ public class LoanRestController {
                             array = @ArraySchema(schema = @Schema(implementation = Repayment.class)),
                             examples = {
                                     @ExampleObject("""
-                                            [{
-                                              "id": 1,
-                                              "amount": 1000,
-                                              "dueDate": "2023-08-23",
-                                              "status": "PENDING",
-                                              "createdDate": "2023-06-14T22:08:38.750774"
-                                            }]""")
+                                            [{"id": 1,"amount": 1000,"dueDate": "2023-08-23","status": "PENDING","createdDate": "2023-06-14T22:08:38.750774"}]
+                                            """)
                             }
                     )}),
             @ApiResponse(responseCode = "400", description = "Loan account not found",
