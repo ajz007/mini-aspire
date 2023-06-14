@@ -11,15 +11,15 @@ The apis are exposed via open api.
 # Table of contents
 1. [Configs](#configs)
 2. [Build and Run](#build-and-run)
-   1. [Windows](##windows)
-   2. [Linux](##linux)
-   3. [URLs](##urls)
+   1. [Windows](#windows)
+   2. [Linux](#linux)
+   3. [URLs](#urls)
 3. [Architecture](#architecture)
 4. [Basic Functional Flow](#basic-functional-flow)
 5. [Design choices](#design-choices)
-   1. [Monolith vs Microservices](##monolith-vs-microservices)
-   2. [RDBMS vs NoSQL](##rdbms-vs-nosql)
-   3. [Microservices Design Patterns implemented](##microservices-design-patterns-implemented)
+   1. [Monolith vs Microservices](#monolith-vs-microservices)
+   2. [RDBMS vs NoSQL](#rdbms-vs-nosql)
+   3. [Microservices Design Patterns implemented](#microservices-design-patterns-implemented)
 
 
 # Configs
