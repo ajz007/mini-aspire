@@ -68,9 +68,7 @@ The apis are exposed via open api.
 
 # Architecture
 
-![alt text](https://github.com/ajz007/mini-aspire/blob/documentation/microservice_arch.png?raw=true)
-![alt text](https://github.com/ajz007/mini-aspire/blob/documentation/microservice_arch.png)
-![Architecture](./microservice_arch.png)
+![Screenshot](microservice_arch.png)
 
 # Basic Functional Flow
 
