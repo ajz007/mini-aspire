@@ -37,7 +37,7 @@ The apis are exposed via open api.
 
 ###  Windows
    1. To build the project
-      1. cd mvn-inspire
+      1. cd mini-aspire
       2. mvnw clean install    
         
    2. To run the project:
@@ -45,7 +45,7 @@ The apis are exposed via open api.
 
 ###  Linux
 1. To build the project
-    1. cd mvn-inspire
+    1. cd mini-asspire
     2. mvnw clean install
 
 2. To run the project:
