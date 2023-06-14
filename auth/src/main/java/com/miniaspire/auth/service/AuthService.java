@@ -1,6 +1,7 @@
 package com.miniaspire.auth.service;
 
 import com.miniaspire.auth.dto.AuthRequest;
+import com.miniaspire.auth.dto.SuccessResponse;
 import com.miniaspire.auth.dto.User;
 import com.miniaspire.auth.dto.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class AuthService {
 
         var requestEntity = new HttpEntity<>(authRequest);
 
-        ResponseEntity<String> res = template.postForEntity("http://USER/user/validate",
-                requestEntity, String.class);
+        ResponseEntity<SuccessResponse> res = template.postForEntity("http://USER/user/validate",
+                requestEntity, SuccessResponse.class);
 
         return res.getStatusCode().is2xxSuccessful();
     }

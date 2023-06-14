@@ -1,0 +1,55 @@
+2023-06-14 18:00:20,189 INFO org.hibernate.validator.internal.util.Version [background-preinit] HV000001: Hibernate Validator 8.0.0.Final
+2023-06-14 18:00:20,264 INFO org.springframework.boot.StartupInfoLogger [main] Starting AuthApplicationTests using Java 19.0.2 with PID 3960 (started by ajitshukla in D:\Workspaces\Learning\challenges\mini-aspire\auth)
+2023-06-14 18:00:20,267 INFO org.springframework.boot.SpringApplication [main] No active profile set, falling back to 1 default profile: "default"
+2023-06-14 18:00:25,680 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-06-14 18:00:25,747 INFO org.springframework.data.repository.config.RepositoryConfigurationDelegate [main] Finished Spring Data repository scanning in 45 ms. Found 0 JPA repository interfaces.
+2023-06-14 18:00:26,589 INFO org.springframework.cloud.context.scope.GenericScope [main] BeanFactory id=1d8c617b-c4d5-3a38-820e-1760788130c0
+2023-06-14 18:00:27,865 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Starting...
+2023-06-14 18:00:29,065 INFO com.zaxxer.hikari.pool.HikariPool [main] HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:authdb user=SA
+2023-06-14 18:00:29,067 INFO com.zaxxer.hikari.HikariDataSource [main] HikariPool-1 - Start completed.
+2023-06-14 18:00:29,214 INFO org.hibernate.jpa.internal.util.LogHelper [main] HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-06-14 18:00:29,436 INFO org.hibernate.Version [main] HHH000412: Hibernate ORM core version 6.1.7.Final
+2023-06-14 18:00:34,181 INFO org.hibernate.engine.jdbc.dialect.internal.DialectFactoryImpl [main] HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2023-06-14 18:00:35,194 INFO org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator [main] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-06-14 18:00:35,212 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [main] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-06-14 18:00:35,573 WARN org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration [main] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-06-14 18:00:35,730 WARN org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration [main] 
+
+Using generated security password: 2ddb71c6-8be7-4fbe-a93a-01d7abe8243d
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2023-06-14 18:00:39,845 INFO org.springframework.security.web.DefaultSecurityFilterChain [main] Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@1164990a, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@549404e7, org.springframework.security.web.context.SecurityContextHolderFilter@73dd3a46, org.springframework.security.web.header.HeaderWriterFilter@4687c184, org.springframework.security.web.authentication.logout.LogoutFilter@400d1c30, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@71e89a26, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@54eb2bf6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@29c76d75, org.springframework.security.web.access.ExceptionTranslationFilter@614ae4eb, org.springframework.security.web.access.intercept.AuthorizationFilter@52a2e2fb]
+2023-06-14 18:00:41,321 INFO org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration [main] H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:authdb'
+2023-06-14 18:00:41,692 INFO org.springframework.cloud.netflix.eureka.config.DiscoveryClientOptionalArgsConfiguration [main] Eureka HTTP Client uses RestTemplate.
+2023-06-14 18:00:42,040 WARN org.springframework.cloud.loadbalancer.config.LoadBalancerCacheAutoConfiguration$LoadBalancerCaffeineWarnLogger [main] Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2023-06-14 18:00:42,103 INFO org.springframework.cloud.netflix.eureka.InstanceInfoFactory [main] Setting initial instance status as: STARTING
+2023-06-14 18:00:42,598 INFO com.netflix.discovery.DiscoveryClient [main] Initializing Eureka in region default
+2023-06-14 18:00:42,608 INFO com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver [main] Resolving eureka endpoints via configuration
+2023-06-14 18:00:42,678 INFO com.netflix.discovery.DiscoveryClient [main] Disable delta property : false
+2023-06-14 18:00:42,678 INFO com.netflix.discovery.DiscoveryClient [main] Single vip registry refresh property : null
+2023-06-14 18:00:42,679 INFO com.netflix.discovery.DiscoveryClient [main] Force full registry fetch : false
+2023-06-14 18:00:42,679 INFO com.netflix.discovery.DiscoveryClient [main] Application is null : false
+2023-06-14 18:00:42,679 INFO com.netflix.discovery.DiscoveryClient [main] Registered Applications size is zero : true
+2023-06-14 18:00:42,680 INFO com.netflix.discovery.DiscoveryClient [main] Application version is -1: true
+2023-06-14 18:00:42,680 INFO com.netflix.discovery.DiscoveryClient [main] Getting all instance registry info from the eureka server
+2023-06-14 18:00:43,695 INFO com.netflix.discovery.DiscoveryClient [main] The response status is 200
+2023-06-14 18:00:43,699 INFO com.netflix.discovery.DiscoveryClient [main] Starting heartbeat executor: renew interval is: 30
+2023-06-14 18:00:43,704 INFO com.netflix.discovery.InstanceInfoReplicator [main] InstanceInfoReplicator onDemand update allowed rate per min is 4
+2023-06-14 18:00:43,722 INFO com.netflix.discovery.DiscoveryClient [main] Discovery Client initialized at timestamp 1686745843709 with initial instances count: 5
+2023-06-14 18:00:43,725 INFO org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry [main] Registering application AUTH with eureka with status UP
+2023-06-14 18:00:43,726 INFO com.netflix.discovery.DiscoveryClient$3 [main] Saw local status change event StatusChangeEvent [timestamp=1686745843726, current=UP, previous=STARTING]
+2023-06-14 18:00:43,729 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_AUTH/DELL-8YGVS93.AD.NSEIT.COM:auth:8084: registering service...
+2023-06-14 18:00:43,768 INFO org.springframework.boot.StartupInfoLogger [main] Started AuthApplicationTests in 25.743 seconds (process running for 30.684)
+2023-06-14 18:00:43,810 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_AUTH/DELL-8YGVS93.AD.NSEIT.COM:auth:8084 - registration status: 204
+2023-06-14 18:00:44,808 INFO org.springframework.cloud.netflix.eureka.serviceregistry.EurekaServiceRegistry [SpringApplicationShutdownHook] Unregistering application AUTH with eureka with status DOWN
+2023-06-14 18:00:44,808 INFO com.netflix.discovery.DiscoveryClient$3 [SpringApplicationShutdownHook] Saw local status change event StatusChangeEvent [timestamp=1686745844808, current=DOWN, previous=UP]
+2023-06-14 18:00:44,809 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_AUTH/DELL-8YGVS93.AD.NSEIT.COM:auth:8084: registering service...
+2023-06-14 18:00:44,814 INFO com.netflix.discovery.DiscoveryClient [DiscoveryClient-InstanceInfoReplicator-0] DiscoveryClient_AUTH/DELL-8YGVS93.AD.NSEIT.COM:auth:8084 - registration status: 204
+2023-06-14 18:00:44,816 INFO org.springframework.orm.jpa.AbstractEntityManagerFactoryBean [SpringApplicationShutdownHook] Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-06-14 18:00:44,819 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown initiated...
+2023-06-14 18:00:44,822 INFO com.zaxxer.hikari.HikariDataSource [SpringApplicationShutdownHook] HikariPool-1 - Shutdown completed.
+2023-06-14 18:00:44,823 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] Shutting down DiscoveryClient ...
+2023-06-14 18:00:47,830 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] Unregistering ...
+2023-06-14 18:00:47,836 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] DiscoveryClient_AUTH/DELL-8YGVS93.AD.NSEIT.COM:auth:8084 - deregister  status: 200
+2023-06-14 18:00:47,843 INFO com.netflix.discovery.DiscoveryClient [SpringApplicationShutdownHook] Completed shut down of DiscoveryClient

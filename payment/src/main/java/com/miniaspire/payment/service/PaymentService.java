@@ -111,7 +111,7 @@ public class PaymentService {
 
         LOG.info("Update Repayment status to PAID for repayment id " + scheduledRepayment.getId());
         restTemplate.exchange("http://LOAN/loan/repayments/" + scheduledRepayment.getId(),
-                HttpMethod.PUT, requestUpdate, String.class);
+                HttpMethod.PUT, requestUpdate, SuccessResponse.class);
     }
 
     /**
@@ -137,7 +137,7 @@ public class PaymentService {
 
         LOG.info("Update Loan status for account " + paymentRequest.getLoanAccount() + " to CLOSED");
         restTemplate.exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount() + "?loanStatus=" + "CLOSED",
-                HttpMethod.PUT, entity, String.class);
+                HttpMethod.PUT, entity, SuccessResponse.class);
     }
 
     private void validateLoanStatus(PaymentRequest paymentRequest, String username, String userRole) {
@@ -151,9 +151,11 @@ public class PaymentService {
                 .exchange("http://LOAN/loan/" + paymentRequest.getLoanAccount(),
                         HttpMethod.GET, entity, Loan.class);
 
-        if (Optional.ofNullable(loan.getBody()).isPresent() && !loan.getBody().getStatus().equals(LoanStatus.APPROVED)) {
-            throw new InvalidInputException("Repayment cannot be initiated until the loan is APPROVED");
-        }
+        Optional.ofNullable(loan.getBody()).ifPresent(body -> {
+            if (!body.getStatus().equals(LoanStatus.APPROVED)) {
+                throw new InvalidInputException("Repayment cannot be initiated until the loan is APPROVED");
+            }
+        });
     }
 
     private Repayment[] getRepayments(PaymentRequest paymentRequest, String username, String userRole) {

@@ -128,8 +128,7 @@ public class LoanServiceTest {
     @Test
     public void updateLoanStatus() {
         loanService.updateLoanStatus(USER_ROLE_ADMIN, SERVICE_ROLE_VALUE, LOAN_ACCOUNT, "APPROVED");
-        /*Mockito.verify(loanRepository).save(LoanEntity.class)
-        Mockito.verify((loanRepository), Mockito.atMost(2));*/
+        //Mockito.verify((loanRepository), Mockito.atMost(2)).save(LoanEntity.class);
 
     }
 

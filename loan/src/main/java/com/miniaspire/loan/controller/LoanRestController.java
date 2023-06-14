@@ -1,13 +1,14 @@
 package com.miniaspire.loan.controller;
 
-import com.miniaspire.loan.dto.Loan;
-import com.miniaspire.loan.dto.LoanCreateRequest;
-import com.miniaspire.loan.dto.LoanCreateRes;
-import com.miniaspire.loan.dto.Repayment;
+import com.miniaspire.loan.dto.*;
 import com.miniaspire.loan.exceptions.UnAuthorisedAccessException;
 import com.miniaspire.loan.service.LoanService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,8 +36,14 @@ public class LoanRestController {
     @Operation(summary = "Get all the loans")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Loan[].class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Loan.class)),
+                            examples = {
+                                    @ExampleObject("""
+                                            [{"account": "100002","loanAmount": 120000,"term": 10}]
+                                            """)
+                            }
+                    )}),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
                     content = @Content)})
     @GetMapping("")
@@ -52,8 +59,8 @@ public class LoanRestController {
     @Operation(summary = "Get details of a Loan Account")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Loan.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = Loan.class))}),
             @ApiResponse(responseCode = "400", description = "Loan account not found",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
@@ -68,32 +75,47 @@ public class LoanRestController {
                 .get(USER_NAME), headers.get(USER_ROLE), loanAccount));
     }
 
-    @Operation(summary = "Update the status of the loan")
+    @Operation(summary = "Update the status of the loan",
+            parameters = {
+                    @Parameter(
+                            in = ParameterIn.QUERY,
+                            name = "loanStatus",
+                            schema = @Schema(allowableValues =
+                                    {"PENDING", "APPROVED", "CLOSED"}),
+                            description = "description ")
+            })
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Loan Status updated with APPROVED",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SuccessResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Loan account not found",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
                     content = @Content)})
     @PutMapping("/{loanAccount}")
-    public ResponseEntity<String> updateLoanStatus(@PathVariable String loanAccount,
-                                                   @RequestParam String loanStatus,
-                                                   @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<SuccessResponse> updateLoanStatus(@PathVariable String loanAccount,
+                                                            @RequestParam String loanStatus,
+                                                            @RequestHeader Map<String, String> headers) {
         if (headers.get(USER_NAME) == null || headers.get(USER_ROLE) == null) {
             throw new UnAuthorisedAccessException(EX_MSG);
         }
         loanService.updateLoanStatus(headers.get(USER_ROLE), headers.get(SERVICE_ROLE), loanAccount, loanStatus);
 
-        return ResponseEntity.ok("Loan Status updated with " + loanStatus);
+        return ResponseEntity.ok(new SuccessResponse("Loan Status updated with " + loanStatus));
     }
 
     @Operation(summary = "Get all loans for a user. Only allowed for ADMIN role")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Loan[].class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            //schema = @Schema(implementation = Loan[].class)
+                            array = @ArraySchema(schema = @Schema(implementation = Loan.class)),
+                            examples = {
+                                    @ExampleObject("""
+                                            [{"account": "100002","loanAmount": 120000,"term": 10}]
+                                            """)
+                            }
+                    )}),
             @ApiResponse(responseCode = "400", description = "You do not have sufficient access for this service",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
@@ -115,8 +137,8 @@ public class LoanRestController {
     @Operation(summary = "Create a loan. Only allowed for user role - USER")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = LoanCreateRes.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = LoanCreateRes.class))}),
             @ApiResponse(responseCode = "400", description = "You do not have sufficient access for this service",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
@@ -136,8 +158,14 @@ public class LoanRestController {
     @Operation(summary = "Get all repayments for a loan account and and repayment status")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = Repayment[].class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = Repayment.class)),
+                            examples = {
+                                    @ExampleObject("""
+                                            [{"id": 1,"amount": 1000,"dueDate": "2023-08-23","status": "PENDING","createdDate": "2023-06-14T22:08:38.750774"}]
+                                            """)
+                            }
+                    )}),
             @ApiResponse(responseCode = "400", description = "Loan account not found",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
@@ -154,23 +182,23 @@ public class LoanRestController {
     @Operation(summary = "Update repayment details. Only allowed from role - SERVICE, ADMIN")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = String.class)) }),
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = SuccessResponse.class))}),
             @ApiResponse(responseCode = "400", description = "Unknown value for RepaymentStatus",
                     content = @Content),
             @ApiResponse(responseCode = "403", description = "Please login to continue",
                     content = @Content)})
     @PutMapping("/repayments/{id}")
-    public ResponseEntity<String> updateRepayment(@PathVariable String id,
-                                                  @RequestBody Repayment repayment,
-                                                  @RequestHeader Map<String, String> headers) {
+    public ResponseEntity<SuccessResponse> updateRepayment(@PathVariable String id,
+                                                           @RequestBody Repayment repayment,
+                                                           @RequestHeader Map<String, String> headers) {
 
         if (headers.get(USER_NAME) == null || headers.get(USER_ROLE) == null) {
             throw new UnAuthorisedAccessException(EX_MSG);
         }
         loanService.updateRepaymentStatus(headers.get(USER_NAME),
                 headers.get(USER_ROLE), headers.get(SERVICE_ROLE), repayment);
-        return ResponseEntity.ok("Repayment updated");
+        return ResponseEntity.ok(new SuccessResponse("Repayment updated"));
     }
 
 }
