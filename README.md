@@ -22,7 +22,7 @@ The apis are exposed via open api.
    3. [Microservices Design Patterns implemented](##microservices-design-patterns-implemented)
 
 
-#<a name="Configs"></a>Configs
+# Configs
 1. Database
     1. The database used here is H2 which is an in-memory database but also supports saving the file to the local disk
     2. To update the config, go to <module>/src/main/resources/application.properties
@@ -35,7 +35,7 @@ The apis are exposed via open api.
 
 # Build and Run
 
-### <a name="Windows"></a> Windows
+###  Windows
    1. To build the project
       1. cd mvn-inspire
       2. mvnw clean install    
@@ -43,7 +43,7 @@ The apis are exposed via open api.
    2. To run the project:
       1. start_all_service.bat
 
-### <a name="Linux"></a> Linux
+###  Linux
 1. To build the project
     1. cd mvn-inspire
     2. mvnw clean install
@@ -51,7 +51,7 @@ The apis are exposed via open api.
 2. To run the project:
     1. ./start_all_service.sh
 
-### <a name="urls"></a> URLs
+###  URLs
 1. To check the status of all services
    http://localhost:8079
 2. To check the openapi for all services
@@ -66,12 +66,13 @@ The apis are exposed via open api.
    http://localhost:8085/h2-console/
    (jdbc url should be same as for payments in application.properties)
 
-# <a name="Architecture"></a> Architecture
+# Architecture
 
 ![alt text](https://github.com/ajz007/mini-aspire/blob/documentation/microservice_arch.png?raw=true)
 ![alt text](https://github.com/ajz007/mini-aspire/blob/documentation/microservice_arch.png)
+![Architecture](./microservice_arch.png)
 
-# <a name="BasicFunctionalFlow"></a> Basic Functional Flow
+# Basic Functional Flow
 
 1. Register user 
    1. Go to http://localhost:8080/swagger-ui.html
@@ -86,9 +87,9 @@ The apis are exposed via open api.
    2. Select Payment Service from 'Select a definition' drop down (Look at the top right corner)
    3. Go to 'POST' /payment to pay for next scheduled repayment.
 
-# <a name="DesignChoices"></a> Design choices
+# Design choices
 
-### <a name="MonolithVsMicroservices"></a> Monolith vs Microservices
+### Monolith vs Microservices
 
 ### Advantages of Monoliths
 1. Easy build
@@ -128,7 +129,7 @@ Going by the microservices approach we would be able to,
    But, with monolith this is very much a possibility and might end up in bad user experience and onboarding which can end up in loosing customers.
 4. So, for above reasons, I would go ahead with microservices
 
-# <a name="RDBMSVsNoSQL"></a> RDBMS vs NoSQL
+# RDBMS vs NoSQL
 
 Largely, we can say that the application would have following entities:
 1. User
@@ -141,7 +142,7 @@ about the atomicity and data integrity hence, I would go ahead with the RDBMS as
 Please note that I am using H2 in-memory database for development which is RDBMS based DB but, we can replace this with any other DB like Oracle, MySql etc.
 The choice of H2 is purely for ease of development and deployment for anybody who wants to validate this project.
 
-# <a name="MicroservicesDesignPatternsImplemented"></a> Microservices Design Patterns implemented
+# Microservices Design Patterns implemented
 
 1. Bounded Context
    The first problem that we face while developing the microservices is, how to define the boundaries of a certain micro-service.
