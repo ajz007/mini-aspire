@@ -70,6 +70,36 @@ The apis are exposed via open api.
 
 ![Screenshot](microservice_arch.png)
 
+   Overall the application consists of 5 microservices:
+   1. ### API-GATEWAY : 
+      As the name suggests its the gateway to the application and all the requests would come to this service. 
+      It would be responsibile for the following in this application:
+      1. Request routing : Forwards the request to the appropriate microservice
+      2. Validate JWT Token
+      3. Load balancing. Co-ordinates with discovery server for this
+      3. Aggregation of the open-apis
+   2. ### DISCOVERY SERVER
+      1. This acts as a service registry and is a repository of the host and port for all the microservices. Each service would register to this.
+      2. Its will store the list of the service replica's ip and port against the service name.
+   3. ### AUTH
+      1. Auth service is responsible for login and token generation. 
+      2. It co-ordinates with user service for this.
+   4. ### USER
+      1. This service stores the user information.
+      2. It maintains its own database for this. It has following tables in that :
+         a) USER
+   5. ### LOAN
+      1. This service stores the information about the loans and their related payments
+      2. It maintains its own database for this. It has following tables in that :
+         a) LOAN
+         b) REPAYMENTS
+         c) LOAN_REPAYMENTS
+   6. ### PAYMENTS
+      1. This servoce stores the information related to payments.
+      2. It maintains its own database for this. It has following tables in that :
+         a) PAYMENT
+      3. This micro-service acts as the orchestrator between LOAN and PAYMENTS to complete a Payment transaction.
+   
 # Basic Functional Flow
 
 1. Register user 
