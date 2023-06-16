@@ -98,7 +98,7 @@ The apis are exposed via open api.
 
 ![Screenshot](microservice_arch.png)
 
-   Overall the application consists of 5 microservices:
+   Overall the application consists of 6 microservices:
    1. ### API-GATEWAY : 
       As the name suggests its the gateway to the application and all the requests would come to this service. 
       It would be responsibile for the following in this application:
