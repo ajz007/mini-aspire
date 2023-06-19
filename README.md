@@ -1,3 +1,8 @@
+```
+**NOTE**: Hey folks anyone who has come across this profile for looking at samples for mini-aspire test by aspireapp then please
+do not use this. This project was rejected by them without giving any reasons. I have requested them for reasons but havent received
+any response yet. Probably they dont understand Java :) 
+```
 # mini-aspire
 mini-aspire is a basic loan application backend where users can largely do the following:
 
